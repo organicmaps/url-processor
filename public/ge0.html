@@ -1,0 +1,77 @@
+<!-- Template which is processed and returned by worker. -->
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: green;
+    }
+
+    a,
+    a:link,
+    a:visited,
+    a:hover,
+    a:active {
+      color: black;
+    }
+
+    #header {
+      text-align: center;
+    }
+
+    h2 {
+      color: white;
+    }
+
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+  </style>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+  <title>${title}</title>
+</head>
+
+<body>
+  <div id="header">
+    <h2 id="name">${name}</h2>
+    <h3>
+      <a id="open" href="#" onclick="onOpenClick">Open in <strong>O</strong>rganic <strong>M</strong>aps app</a>
+      <a href="https://organicmaps.app/">Install <strong>O</strong>rganic <strong>M</strong>aps app</a>
+      <a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=${zoom}/${lat}/${lon}" target="_blank">See on OpenStreet Map</a>
+    </h3>
+  </div>
+  <div id="map" class="map"></div>
+  <script type="text/javascript">
+    const isiOS = navigator.platform.substr(0, 2) === 'iP' ||  // iPhone, iPad, iPod, including simulators.
+      (navigator.userAgent.includes('Mac') && 'ontouchend' in document);  // iPad on iOS 13.
+    const isAndroid = !isiOS && /(android)/i.test(navigator.userAgent);
+    const isDesktop = !isiOS && !isAndroid;
+
+    if (isDesktop)
+      document.getElementById('open').remove();
+
+    function onOpenClick() {
+      window.open('om://' + location.pathname);
+    }
+    const lat = ${ lat };
+    const lon = ${ lon };
+    const zoom = ${ zoom };
+    const map = L.map('map').setView([lat, lon], zoom);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19,
+    }).addTo(map);
+
+    const marker = L.marker([lat, lon]).addTo(map);
+    marker.bindPopup('${name}');//.openPopup();
+  </script>
+</body>
+
+</html>

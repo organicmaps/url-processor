@@ -1,0 +1,28 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "9Z6432XD7L.app.organicmaps",
+        "paths": [
+          "NOT /",
+          "*"
+        ]
+      },
+      {
+        "appID": "9Z6432XD7L.app.organicmaps.debug",
+        "paths": [
+          "NOT /",
+          "*"
+        ]
+      },
+      {
+        "appID": "9Z6432XD7L.app.organicmaps.beta",
+        "paths": [
+          "NOT /",
+          "*"
+        ]
+      }
+    ]
+  }
+}

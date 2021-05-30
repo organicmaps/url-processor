@@ -1,0 +1,43 @@
+# Default worker is for dev only.
+# See omaps and organicmaps environments below for production.
+name = 'url-processor'
+type = 'javascript'
+# Organic Maps CF Account ID.
+account_id = '462f578f0939f041e2c24ec99adce458'
+workers_dev = true
+
+[site]
+bucket = './public'
+entry-point = './workers-site'
+
+[build]
+upload.format = 'service-worker'
+command = 'npm i --prefer-offline --no-audit && npm run build'
+
+[vars]
+DEBUG = true
+
+
+[env.omaps]
+name = 'url-processor-omaps'
+workers_dev = false
+# omaps.app CF zone ID.
+zone_id = '3fce06554abc3899504e11d928be0ee7'
+# See the full list of handled files in the code.
+route = 'omaps.app/*'
+
+[env.omaps.vars]
+DEBUG = false
+
+
+#[env.organicmaps]
+#DEBUG = false
+#name = 'url-processor-organicmaps'
+#workers_dev = false
+# organicmaps.app CF zone ID.
+#zone_id = 'a520ad91909e819d66c62f53f9454589'
+# See the full list of handled files in the code.
+#route = 'organicmaps.app/*'
+
+[env.organicmaps.vars]
+DEBUG = false
