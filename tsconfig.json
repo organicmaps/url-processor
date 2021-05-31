@@ -4,9 +4,9 @@
     "outDir": "./dist",
     "module": "ES6",
     "moduleResolution": "node",
-    "target": "ES2021",
+    "target": "ESNext",
     "lib": [
-      "ES2021",
+      "ESNext",
       "webworker"
     ],
     "alwaysStrict": true,
