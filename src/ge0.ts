@@ -14,10 +14,11 @@ export async function onGe0Decode(template: string, encodedLatLonZoom: string, n
   const llz = decodeLatLonZoom(encodedLatLonZoom);
   let title = 'Organic Maps';
   if (name) {
-    name = decodeURIComponent(name.replaceAll('_', ' ')).replaceAll('"', "'");
+    name = decodeURIComponent(name.replace(/\+|_/g, ' '));
+    name = name.replace("'", '&rsquo;');  // To embed in popup.
     title = name + ' | ' + title;
   } else {
-    name = '♥';
+    name = 'Shared via <a href="https://organicmaps.app">Organic Maps app</a>';
   }
 
   template = replaceInTemplate(template, { ...llz, title, name });
