@@ -1,0 +1,59 @@
+<!-- Template which is processed and returned by worker. -->
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Organic Maps Links Test Page</title>
+</head>
+
+<body>
+  <h1>Organic Maps Links Test Page</h1>
+  <h3>Organic Maps links:</h3>
+  <ol>
+    <li><a href="om://o4B4pYZsRs">om://o4B4pYZsRs</a></li>
+    <li><a href="om://o4B4pYZsRs/">om://o4B4pYZsRs/</a></li>
+    <li><a href="om://o4B4pYZsRs/Zoo_Zürich">om://o4B4pYZsRs/Zoo_Zürich</a></li>
+    <li><a href="http://omaps.app/o4B4pYZsRs">http://omaps.app/o4B4pYZsRs</a></li>
+    <li><a href="http://omaps.app/o4B4pYZsRs/">http://omaps.app/o4B4pYZsRs/</a></li>
+    <li><a href="http://omaps.app/o4B4pYZsRs/Zoo_Zürich">http://omaps.app/o4B4pYZsRs/Zoo_Zürich</a></li>
+    <li><a href="https://omaps.app/o4B4pYZsRs">https://omaps.app/o4B4pYZsRs</a></li>
+    <li><a href="https://omaps.app/o4B4pYZsRs/">https://omaps.app/o4B4pYZsRs/</a></li>
+    <li><a href="https://omaps.app/o4B4pYZsRs/Zoo_Zürich">https://omaps.app/o4B4pYZsRs/Zoo_Zürich</a></li>
+  </ol>
+
+  <h3><a href="https://en.wikipedia.org/wiki/Geo_URI_scheme">geo url scheme</a></h3>
+  <ol>
+    <li><a href="geo:37.786971,-122.399677">geo:37.786971,-122.399677</a></li>
+    <li><a href="geo:37.786971,-122.399677,1000">geo:37.786971,-122.399677,1000</a></li>
+    <li><a href="geo:37.786971,-122.399677;u=35">geo:37.786971,-122.399677;u=35</a></li>
+    <li><a href="geo:37.786971,-122.399677;z=17">geo:37.786971,-122.399677;z=17</a></li>
+    <li><a href="geo:0,0?q=37.78918,-122.40335">geo:0,0?q=37.78918,-122.40335</a></li>
+    <li><a href="geo:0,0?q=37.78918,-122.40335&z=16">geo:0,0?q=37.78918,-122.40335&z=16</a></li>
+  </ol>
+
+  <h3>MAPS.ME url scheme</h3>
+  <ol>
+    <li><a href="ge0://o4B4pYZsRs">ge0://o4B4pYZsRs</a></li>
+    <li><a href="ge0://o4B4pYZsRs/">ge0://o4B4pYZsRs/</a></li>
+    <li><a href="ge0://o4B4pYZsRs/Zoo_Zürich">ge0://o4B4pYZsRs/Zoo_Zürich</a></li>
+  </ol>
+  <div id="console">
+  </div>
+  <div id="map" class="map"></div>
+
+  <script type="text/javascript">
+    const LOG = (str) => document.getElementById('console').textContent += str + '\n';
+
+    const isiOS = navigator.platform.substr(0, 2) === 'iP' ||  // iPhone, iPad, iPod, including simulators.
+      (navigator.userAgent.includes('Mac') && 'ontouchend' in document);  // iPad on iOS 13.
+    const isAndroid = !isiOS && /(android)/i.test(navigator.userAgent);
+    const isDesktop = !isiOS && !isAndroid;
+    LOG(`iOS: ${isiOS}, Android: ${isAndroid}, Desktop: ${isDesktop}`);
+
+  </script>
+</body>
+
+</html>
