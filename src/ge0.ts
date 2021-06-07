@@ -64,7 +64,7 @@ function decodeLatLonZoom(encodedLatLonZoom: string): LatLonZoom {
   return { lat, lon, zoom };
 }
 
-const base64Reverse: { [key: number]: number } = {
+const base64Reverse: Record<number, number> = {
   65: 0,
   66: 1,
   67: 2,
