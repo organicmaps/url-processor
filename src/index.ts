@@ -8,6 +8,11 @@ const GOOGLE = 'https://play.google.com/store/apps/details?id=app.organicmaps';
 const HUAWEI = 'https://appgallery.huawei.com/#/app/C104325611';
 const FDROID = 'https://f-droid.org/en/packages/app.organicmaps/';
 const OMAPS_REWRITE_RULES: Record<string, string> = {
+  // Hidden files and symlinks are not uploaded by wrangler.
+  // See https://developers.cloudflare.com/workers/cli-wrangler/configuration#default-ignored-entries
+  '/apple-app-site-association': '/apple-app-site-association.json',
+  '/.well-known/apple-app-site-association': '/apple-app-site-association.json',
+  '/.well-known/assetlinks.json': '/assetlinks.json',
   '/': '/get.html',
   '/app': '/get.html',
   '/get': '/get.html',

@@ -45,6 +45,7 @@ Deploy to prod manually using `npx wrangler publish --env omaps` or this
 
 ## Known issues
 
+- Hidden directories and symlinks in worker site assets are ignored by wrangler.
 - Cloudflare's free Flexible SSL certificates does not support 4-th level
   subdomains like a.b.example.com, so you can see strange SSL errors.
 - HTTPS `fetch` requests from Workers are converted to HTTP ones if the target
