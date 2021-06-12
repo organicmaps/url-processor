@@ -20,7 +20,7 @@ export async function onGe0Decode(template: string, url: string): Promise<Respon
   let title = 'Organic Maps';
   if (name) {
     name = decodeURIComponent(name.replace(/\+|_/g, ' '));
-    name = name.replace("'", '&rsquo;');  // To embed in popup.
+    name = name.replace("'", '&rsquo;'); // To embed in popup.
     title = name + ' | ' + title;
   } else {
     name = 'Shared via <a href="https://organicmaps.app">Organic Maps app</a>';
@@ -30,7 +30,7 @@ export async function onGe0Decode(template: string, url: string): Promise<Respon
     ...llz,
     title,
     name,
-    path: pathname + search + hash,  // Starts with a slash
+    path: pathname + search + hash, // Starts with a slash
   });
   return new Response(template, { headers: { 'content-type': 'text/html' } });
 }

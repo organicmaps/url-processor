@@ -55,8 +55,7 @@ async function handleFetchEvent(event: FetchEvent) {
 
   // First, process all known redirects.
   if ((DEBUG || hostname === 'omaps.app') && pathname in OMAPS_REWRITE_RULES) {
-    if (OMAPS_REWRITE_RULES[pathname].startsWith('http'))
-      return Response.redirect(OMAPS_REWRITE_RULES[pathname], 302);
+    if (OMAPS_REWRITE_RULES[pathname].startsWith('http')) return Response.redirect(OMAPS_REWRITE_RULES[pathname], 302);
   }
 
   // See https://github.com/cloudflare/kv-asset-handler#optional-arguments
@@ -75,7 +74,7 @@ async function handleFetchEvent(event: FetchEvent) {
   // Try to return a static resource first.
   try {
     return await getAssetFromKV(event, getAssetOptions);
-  } catch (_) { }
+  } catch (_) {}
   // No static resource were found, try to handle a specific dynamic request.
   getAssetOptions.mapRequestToAsset = (request: Request) => {
     const url = new URL(request.url);

@@ -1,4 +1,4 @@
-export { };
+export {};
 
 // Defined in wrangler.toml
 declare global {
