@@ -7,6 +7,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
+  <meta name="apple-itunes-app" content="app-id=1567437057, app-argument=om:/${path}">
+
+  <meta name="description" content="Android & iOS offline maps app for travelers, tourists, hikers, and cyclists based on top of crowd-sourced OpenStreetMap data and curated with love by MAPS.ME founders.">
+  <meta itemprop="name" content="Android & iOS offline maps app for travelers, tourists, hikers, and cyclists based on top of crowd-sourced OpenStreetMap data and curated with love by MAPS.ME founders.">
+  <meta itemprop="description" content="Android & iOS offline maps app for travelers, tourists, hikers, and cyclists based on top of crowd-sourced OpenStreetMap data and curated with love by MAPS.ME founders.">
+
   <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
@@ -73,10 +79,10 @@
   <div id="header">
     <span id="name">${name}</span>
     <span>
-      <a id="open" href="#" class="link" onclick="onOpenClick">
+      <a id="open" href="om:/${path}" class="link">
         Open in Organic Maps
       </a>
-      <a href="https://organicmaps.app/" target="_blank" class="link">
+      <a href="https://omaps.app/get" target="_blank" class="link">
         Install Organic Maps
       </a>
       <a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=${zoom}/${lat}/${lon}" target="_blank" class="link">
@@ -94,9 +100,6 @@
     if (isDesktop)
       document.getElementById('open').remove();
 
-    function onOpenClick() {
-      window.open('om:/' + location.pathname);
-    }
     const lat = ${ lat };
     const lon = ${ lon };
     const zoom = ${ zoom };
