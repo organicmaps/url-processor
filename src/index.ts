@@ -77,9 +77,6 @@ async function handleFetchEvent(event: FetchEvent) {
     return await getAssetFromKV(event, getAssetOptions);
   } catch (_) { }
   // No static resource were found, try to handle a specific dynamic request.
-  // Filter empty pathname elements.
-  const params = pathname.split('/').filter(Boolean);
-
   getAssetOptions.mapRequestToAsset = (request: Request) => {
     const url = new URL(request.url);
     url.pathname = GE0_TEMPLATE_PATH;
@@ -87,5 +84,5 @@ async function handleFetchEvent(event: FetchEvent) {
   };
   const resp = await getAssetFromKV(event, getAssetOptions);
   const ge0HtmlTemplate = await resp.text();
-  return onGe0Decode(ge0HtmlTemplate, params[0], params.length >= 2 ? params[1] : undefined);
+  return onGe0Decode(ge0HtmlTemplate, event.request.url);
 }

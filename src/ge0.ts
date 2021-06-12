@@ -10,7 +10,12 @@ function replaceInTemplate(template: string, data: Record<string, any>) {
 }
 
 // Throws on decode error.
-export async function onGe0Decode(template: string, encodedLatLonZoom: string, name?: string): Promise<Response> {
+export async function onGe0Decode(template: string, url: string): Promise<Response> {
+  const { pathname, search, hash } = new URL(url);
+  // Filter empty pathname elements.
+  const params = pathname.split('/').filter(Boolean);
+  const encodedLatLonZoom = params[0];
+  let name = params.length > 1 ? params[1] : undefined;
   const llz = decodeLatLonZoom(encodedLatLonZoom);
   let title = 'Organic Maps';
   if (name) {
@@ -21,7 +26,12 @@ export async function onGe0Decode(template: string, encodedLatLonZoom: string, n
     name = 'Shared via <a href="https://organicmaps.app">Organic Maps app</a>';
   }
 
-  template = replaceInTemplate(template, { ...llz, title, name });
+  template = replaceInTemplate(template, {
+    ...llz,
+    title,
+    name,
+    path: pathname + search + hash,  // Starts with a slash
+  });
   return new Response(template, { headers: { 'content-type': 'text/html' } });
 }
 
