@@ -3,7 +3,7 @@
   "name": "omaps-url-handler",
   "version": "1.0.0",
   "description": "Processes specific HTTP requests to domains",
-  "main": "dist/index.js",
+  "main": "workers-site/index.js",
   "scripts": {
     "build": "esbuild src/index.ts --bundle --outfile=workers-site/index.js",
     "test": "eslint src/**/*.ts && tsc --noEmit",
