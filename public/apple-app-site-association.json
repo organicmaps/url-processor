@@ -4,24 +4,15 @@
     "details": [
       {
         "appID": "9Z6432XD7L.app.organicmaps",
-        "paths": [
-          "NOT /",
-          "*"
-        ]
+        "paths": ["NOT /googleplay", "/??????????*"]
       },
       {
         "appID": "9Z6432XD7L.app.organicmaps.debug",
-        "paths": [
-          "NOT /",
-          "*"
-        ]
+        "paths": ["NOT /googleplay", "/??????????*"]
       },
       {
         "appID": "9Z6432XD7L.app.organicmaps.beta",
-        "paths": [
-          "NOT /",
-          "*"
-        ]
+        "paths": ["NOT /googleplay", "/??????????*"]
       }
     ]
   }

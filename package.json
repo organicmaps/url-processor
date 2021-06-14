@@ -7,7 +7,7 @@
   "scripts": {
     "build": "esbuild src/index.ts --bundle --outfile=workers-site/index.js",
     "test": "eslint src/**/*.ts && tsc --noEmit",
-    "format": "prettier --write 'src/**/*.{ts,tsx,json}'"
+    "format": "prettier --write 'src/**/*.{ts,tsx,json}' public/*.json"
   },
   "author": "Alexander Borsuk <me@alex.bio>",
   "license": "MIT",
