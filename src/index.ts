@@ -3,7 +3,7 @@ import { onGe0Decode } from './ge0';
 
 const NOT_FOUND_REDIRECT_URL = 'https://organicmaps.app';
 const GE0_TEMPLATE_PATH = '/ge0.html';
-const APPSTORE = 'https://testflight.apple.com/join/lrKCl08I';
+const APPSTORE = 'https://apps.apple.com/app/organic-maps/id1567437057';
 const GOOGLE = 'https://play.google.com/store/apps/details?id=app.organicmaps';
 const HUAWEI = 'https://appgallery.huawei.com/#/app/C104325611';
 const FDROID = 'https://f-droid.org/en/packages/app.organicmaps/';
