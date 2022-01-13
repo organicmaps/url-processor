@@ -8,9 +8,11 @@ const GOOGLE = 'https://play.google.com/store/apps/details?id=app.organicmaps';
 const HUAWEI = 'https://appgallery.huawei.com/#/app/C104325611';
 const FDROID = 'https://f-droid.org/en/packages/app.organicmaps/';
 const OMAPS_REWRITE_RULES: Record<string, string> = {
+  '/apple-touch-icon.png': '/icons/apple-touch-icon.png',
+  '/apple-touch-icon-precomposed.png': '/icons/apple-touch-icon.png',
+  '/apple-app-site-association': '/apple-app-site-association.json',
   // Hidden files and symlinks are not uploaded by wrangler.
   // See https://developers.cloudflare.com/workers/cli-wrangler/configuration#default-ignored-entries
-  '/apple-app-site-association': '/apple-app-site-association.json',
   '/.well-known/apple-app-site-association': '/apple-app-site-association.json',
   '/.well-known/assetlinks.json': '/assetlinks.json',
   '/': '/get.html',
@@ -74,7 +76,7 @@ async function handleFetchEvent(event: FetchEvent) {
   // Try to return a static resource first.
   try {
     return await getAssetFromKV(event, getAssetOptions);
-  } catch (_) {}
+  } catch (_) { }
   // No static resource were found, try to handle a specific dynamic request.
   getAssetOptions.mapRequestToAsset = (request: Request) => {
     const url = new URL(request.url);
