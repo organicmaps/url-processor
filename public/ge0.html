@@ -33,7 +33,7 @@
       color: #00AA00;
       padding: 5px;
       text-decoration: none;
-      display: inline-block;
+      display: inline;
       border: 1px solid #00AA00;
     }
 
@@ -41,6 +41,16 @@
       background-color: #00AA00;
       color: white;
       cursor: grab;
+    }
+
+    .box {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: center;
+    }
+    .block {
+      padding-block: 5px;
+      padding-inline: 2px;
     }
 
     a,
@@ -63,7 +73,7 @@
       position: fixed;
       width: 100%;
       z-index: 1000;
-      padding: 10px;
+      padding: 5px;
     }
 
     #map {
@@ -76,29 +86,33 @@
 </head>
 
 <body>
-  <div id="header">
-    <span id="name">${name}</span>
-    <span>
-      <a id="open" href="om:/${path}" class="link">
-        Open in Organic Maps
-      </a>
-      <a href="https://omaps.app/get" target="_blank" class="link">
-        Install Organic Maps
-      </a>
-      <a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=${zoom}/${lat}/${lon}" target="_blank" class="link">
-        See on OpenStreetMap
-      </a>
-    </span>
+  <div id="header" class="box">
+    <div id="open" class="block">
+      <a href="om:/${path}" class="link">Show in Organic Maps</a>
+    </div>
+    <div id="osm" class="block">
+      <a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=${zoom}/${lat}/${lon}" target="_blank" class="link">See on OpenStreetMap</a>
+    </div>
+    <div class="block">
+      <a href="https://omaps.app/get" target="_blank" class="link">Get Organic Maps</a>
+    </div>
   </div>
   <div id="map" class="map"></div>
+
   <script type="text/javascript">
     const isiOS = navigator.platform.substr(0, 2) === 'iP' ||  // iPhone, iPad, iPod, including simulators.
       (navigator.userAgent.includes('Mac') && 'ontouchend' in document);  // iPad on iOS 13.
     const isAndroid = !isiOS && /(android)/i.test(navigator.userAgent);
     const isDesktop = !isiOS && !isAndroid;
+    coords = 'Lat: ${lat}, Lon: ${lon}';
 
     if (isDesktop)
+    {
       document.getElementById('open').remove();
+    } else {
+      document.getElementById('osm').remove();
+      coords = '<a href="geo:${lat},${lon}?z=${zoom}">' + coords + '</a>';
+    }
 
     const lat = ${ lat };
     const lon = ${ lon };
@@ -111,7 +125,7 @@
     map.zoomControl.setPosition('bottomright');
 
     const marker = L.marker([lat, lon]).addTo(map);
-    marker.bindPopup('${name}');//.openPopup();
+    marker.bindPopup('${name}<br />' + coords).openPopup();
   </script>
 </body>
 
