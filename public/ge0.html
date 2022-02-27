@@ -20,55 +20,115 @@
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
   <style>
+
     html,
     body {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
+      font-family: sans-serif;
+      font-weight: lighter;
+      line-height: 1.2em;
+      display: flex;
+      flex-flow: column;
     }
-
+    
     .link {
-      background-color: white;
-      color: #00AA00;
-      padding: 5px;
-      text-decoration: none;
+      border-radius: 25px;
+      border: 1px solid #449f33;
+      margin-top: 2px;
+      margin-bottom: 2px;
       display: inline-block;
-      border: 1px solid #00AA00;
     }
-
-    .link:hover {
-      background-color: #00AA00;
-      color: white;
-      cursor: grab;
+    
+    .linkcolour {
+      border-radius: 25px;
+      padding: 5px;
+      padding-left: 10px;
+      padding-right: 10px;
+      text-decoration: none;
+      color: #449f33;
+      vertical-align: middle;
+      display: inline-block;
     }
-
-    a,
-    a:link,
-    a:visited {}
-
-    a:hover,
-    a:active {}
-
-    #name {
-      font-size: x-large;
-      font-weight: bold;
-      margin: 0 5px 0 5px;
+    
+    .linkcolour:hover {
+      background-color: #449f33;
+      color: #FFF;
+      cursor: pointer;
+    }
+    
+    .linkcolour:active {
+      background-color: #24541b;
     }
 
     #header {
-      color: white;
-      background-color: #00AA00AA;
+      background-color: #FFF;
       text-align: center;
-      position: fixed;
-      width: 100%;
-      z-index: 1000;
       padding: 10px;
+      box-shadow: 0 3px 10px 0 #00000030;
+      display: flex;
+      flex-flow: row wrap;
+      align-items: center;
+      gap: 10px;
+      justify-content: space-around;
+      overflow-wrap: break-word;
+      z-index: 100;
+    }
+
+    #logo {
+      vertical-align: middle; 
+      height: 2em;
+      flex-flow: row wrap;
+      align-items: center;
+      gap: 10px;
+      display: inline-flex;
+      justify-content: space-between;
+      overflow-wrap: break-word;
+    }
+    
+    #name {
+      flex: 1;
+      font-size: x-large;
     }
 
     #map {
-      height: 100%;
       width: 100%;
+      flex: 1 1 auto;
+      z-index: 1;
+    }
+    
+    #notif {
+      z-index: 1000;
+      border-radius: 25px;
+      padding: 5px;
+      padding-left: 10px;
+      padding-right: 10px;
+      overflow-wrap: break-word;
+      box-shadow: 0 3px 10px 0 #00000030;
+      visibility: hidden; 
+      background-color: #FFF;
+      color: #449f33;
+      position: absolute;
+      transform: translateX(-50%);
+      left: 50%;
+      top: 10%;
+    }    
+          
+    #notif.show {
+      visibility: visible;
+      animation: fadein 0.5s, fadeout 0.5s 1s;
+    }
+    
+    @keyframes fadein {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeout {
+      from { opacity: 1; }
+      to { opacity: 0; }
     }
   </style>
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
@@ -77,40 +137,89 @@
 
 <body>
   <div id="header">
+    <a href="https://organicmaps.app/">
+      <img id="logo" src="/icons/logo-icon.svg"/>
+    </a>
     <span id="name">${name}</span>
-    <span>
-      <a id="open" href="om:/${path}" class="link">
+    <div>
+      <a id="open" onclick="triggerApp()" class="linkcolour link">
         Open in Organic Maps
       </a>
-      <a href="https://omaps.app/get" target="_blank" class="link">
+      <a id="install" href="/get.html" target="_blank" class="linkcolour link">
         Install Organic Maps
       </a>
-      <a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=${zoom}/${lat}/${lon}" target="_blank" class="link">
+      <a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=${zoom}/${lat}/${lon}" target="_blank" class="linkcolour link">
         See on OpenStreetMap
       </a>
-    </span>
+      <div class="link">
+        <a id = "geolink" href="geo:${lat},${lon}?Z=${zoom}" onclick="copyCoords()" target="_blank" class="linkcolour" style="border-radius: 100px 0px 0px 100px;">
+          ${lat}, ${lon}
+        </a><a id="cpbtn" href="#" onclick="copyCoords()" class="linkcolour" style="border-radius: 0px 100px 100px 0px; border-left: solid 1px #449f33">
+          📋
+        </a>
+      </div>
+    </div>
   </div>
   <div id="map" class="map"></div>
+  <div id="notif" class="notif">Coordinates copied to clipboard.</div>
   <script type="text/javascript">
-    const isiOS = navigator.platform.substr(0, 2) === 'iP' ||  // iPhone, iPad, iPod, including simulators.
+    var isiOS = navigator.platform.substr(0, 2) === 'iP' ||  // iPhone, iPad, iPod, including simulators.
       (navigator.userAgent.includes('Mac') && 'ontouchend' in document);  // iPad on iOS 13.
-    const isAndroid = !isiOS && /(android)/i.test(navigator.userAgent);
-    const isDesktop = !isiOS && !isAndroid;
+    var isAndroid = !isiOS && /(android)/i.test(navigator.userAgent);
+    var isDesktop = !isiOS && !isAndroid;
+    var isMobile = isiOS || isAndroid;
 
-    if (isDesktop)
+    if (isDesktop) {
       document.getElementById('open').remove();
+      document.getElementById('cpbtn').remove();
+      document.getElementById('geolink').removeAttribute('href');
+      document.getElementById('geolink').removeAttribute('style');
+    };
 
-    const lat = ${ lat };
-    const lon = ${ lon };
-    const zoom = ${ zoom };
-    const map = L.map('map').setView([lat, lon], zoom);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    if (isMobile) {
+      document.getElementById('geolink').removeAttribute('onclick');
+      
+      if(!isiOS) {
+        document.getElementById('install').remove();
+      }
+    };
+    
+    function openStore() {
+      window.location='/get.html';
+    }
+
+    function triggerApp() {
+      window.location='om:/${path}';
+      if(!isiOS) {
+        setTimeout(openStore, 700);
+      }
+    }
+    
+    function copyCoords() {
+      var el = document.getElementById("notif");
+      el.className = "show";
+      setTimeout(function(){ el.className = el.className.replace("show", ""); }, 1500);
+      navigator.clipboard.writeText("${lat}, ${lon}");
+    }
+
+    var lat = ${ lat };
+    var lon = ${ lon };
+    var zoom = ${ zoom };
+    var map = L.map('map').setView([lat, lon], zoom);
+    var POI_Icon = L.icon({
+      iconUrl: '/placemarks/poi-icon.svg',
+      iconSize: [25, 36.5],
+      iconAnchor: [12.5, 36.5],
+      popupAnchor:  [0, -36.5]
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { /*https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png*/
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       maxZoom: 19,
     }).addTo(map);
     map.zoomControl.setPosition('bottomright');
 
-    const marker = L.marker([lat, lon]).addTo(map);
+    var marker = L.marker([lat, lon], {icon: POI_Icon}).addTo(map);
     marker.bindPopup('${name}');//.openPopup();
   </script>
 </body>

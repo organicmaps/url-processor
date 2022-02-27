@@ -21,7 +21,8 @@
   <title>Download and Install Organic Maps</title>
 
   <script type="text/javascript">
-    const defaultUrl = 'https://github.com/organicmaps/organicmaps#organic-maps';
+    const defaultUrl = 'https://organicmaps.app/';
+    const githubUrl = 'https://github.com/organicmaps/organicmaps#organic-maps';
     const appStoreUrl = 'https://apps.apple.com/app/id1567437057';
     const googlePlayUrl = 'https://play.google.com/store/apps/details?id=app.organicmaps';
     const appGalleryUrl = 'https://appgallery.huawei.com/#/app/C104325611';
@@ -42,7 +43,7 @@
     } else if (isiOS) {
       redirectUrl = appStoreUrl;
     }
-    window.location.replace(redirectUrl);
+    window.open(redirectUrl,'_self');
   </script>
 
   <style>

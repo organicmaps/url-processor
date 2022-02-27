@@ -23,7 +23,7 @@ export async function onGe0Decode(template: string, url: string): Promise<Respon
     name = name.replace("'", '&rsquo;'); // To embed in popup.
     title = name + ' | ' + title;
   } else {
-    name = 'Shared via <a href="https://organicmaps.app">Organic Maps app</a>';
+    name = 'Shared via <a href="https://organicmaps.app">Organic Maps</a>';
   }
 
   template = replaceInTemplate(template, {
