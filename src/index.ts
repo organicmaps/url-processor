@@ -8,6 +8,7 @@ const GOOGLE = 'https://play.google.com/store/apps/details?id=app.organicmaps';
 const HUAWEI = 'https://appgallery.huawei.com/#/app/C104325611';
 const FDROID = 'https://f-droid.org/en/packages/app.organicmaps/';
 const OMAPS_REWRITE_RULES: Record<string, string> = {
+  '/api': '/test.html',
   '/apple-touch-icon.png': '/icons/apple-touch-icon.png',
   '/apple-touch-icon-precomposed.png': '/icons/apple-touch-icon.png',
   '/apple-app-site-association': '/apple-app-site-association.json',

@@ -6,25 +6,25 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <title>Organic Maps Links Test Page</title>
+  <title>Organic Maps API and Deep Links Test Page</title>
   <style>
 
-    html,
-    body {
-      margin: 0;
-      padding: 0;
+    html {
       width: 100%;
       height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      margin: 1rem;
+      padding: 0;
       background-color: #FFF;
       font-family: sans-serif;
       font-weight: lighter;
     }
-    
-    a {
-      margin:4px;
-      padding-left: 5px;
-      padding-right: 5px;
-      display: inline-block;
+
+    li {
+      line-height: 1.5rem;
     }
 
     a:hover {
@@ -34,7 +34,13 @@
 </head>
 
 <body>
-  <h1>Organic Maps Links Test Page</h1>
+  <h1><a href="https://organicmaps.app">Organic Maps</a> API and Deep Links Test Page</h1>
+  <p>
+    Here you can test some supported API/deep links scenarios.
+    Please also check Organic Maps <a href="https://github.com/organicmaps/api-android/">Android API</a>
+    and <a href="https://github.com/organicmaps/api-ios/">iOS API</a> code and examples.
+    And let us know if something doesn't work.
+  </p>
   <h3>Organic Maps links:</h3>
   <ol>
     <li><a href="om://o4B4pYZsRs">om://o4B4pYZsRs</a></li>
@@ -78,7 +84,7 @@
       </a></li>
   </ol>
 
-  <h3>Geo url scheme<a href="https://en.wikipedia.org/wiki/Geo_URI_scheme">(link)</a></h3>
+  <h3><a href="https://en.wikipedia.org/wiki/Geo_URI_scheme">Geo url scheme</a></h3>
   <ol>
     <li><a href="geo:37.786971,-122.399677">geo:37.786971,-122.399677</a></li>
     <li><a href="geo:37.786971,-122.399677,1000">geo:37.786971,-122.399677,1000</a></li>
