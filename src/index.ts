@@ -21,6 +21,7 @@ const OMAPS_REWRITE_RULES: Record<string, string> = {
   '/get': '/get.html',
   '/im_get': '/get.html',
   '/install': '/get.html',
+  '/news': 'https://organicmaps.app/news',
   '/test': '/test.html',
   '/test/': '/test.html',
   '/f': FDROID,
