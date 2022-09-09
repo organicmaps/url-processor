@@ -21,21 +21,27 @@
   <title>Download and Install Organic Maps</title>
 
   <script type="text/javascript">
-    const defaultUrl = 'https://organicmaps.app/';
-    const githubUrl = 'https://github.com/organicmaps/organicmaps#organic-maps';
-    const appStoreUrl = 'https://apps.apple.com/app/id1567437057';
-    const googlePlayUrl = 'https://play.google.com/store/apps/details?id=app.organicmaps';
-    const appGalleryUrl = 'https://appgallery.huawei.com/#/app/C104325611';
-    const fdroidUrl = 'https://f-droid.org/en/packages/app.organicmaps/';
+    // Needed for some old browsers on Android 5 together with vars (no const and let!).
+    if (!('includes' in String.prototype)) {
+      String.prototype.includes = function (str) {
+        return this.indexOf(str) !== -1;
+      }
+    }
+    var defaultUrl = 'https://organicmaps.app/';
+    var githubUrl = 'https://github.com/organicmaps/organicmaps#organic-maps';
+    var appStoreUrl = 'https://apps.apple.com/app/id1567437057';
+    var googlePlayUrl = 'https://play.google.com/store/apps/details?id=app.organicmaps';
+    var appGalleryUrl = 'https://appgallery.huawei.com/#/app/C104325611';
+    var fdroidUrl = 'https://f-droid.org/en/packages/app.organicmaps/';
 
-    const isiOS = navigator.platform.substr(0, 2) === 'iP' ||  // iPhone, iPad, iPod, including simulators.
+    var isiOS = navigator.platform.substring(0, 2) === 'iP' ||  // iPhone, iPad, iPod, including simulators.
       (navigator.userAgent.includes('Mac') && 'ontouchend' in document);  // iPad on iOS 13+.
 
-    const isAndroid = !isiOS && /(android)/i.test(navigator.userAgent);
-    const isDesktop = !isiOS && !isAndroid;
+    var isAndroid = !isiOS && /(android)/i.test(navigator.userAgent);
+    var isDesktop = !isiOS && !isAndroid;
 
-    let redirectUrl = defaultUrl;
-    const path = new URL(window.location.href).pathname.toLowerCase();
+    var redirectUrl = defaultUrl;
+    var path = new URL(window.location.href).pathname.toLowerCase();
 
     if (isAndroid) {
       if (navigator.userAgent.includes('Huawei')) redirectUrl = appGalleryUrl;
@@ -43,7 +49,7 @@
     } else if (isiOS) {
       redirectUrl = appStoreUrl;
     }
-    window.open(redirectUrl,'_self');
+    window.open(redirectUrl, '_self');
   </script>
 
   <style>

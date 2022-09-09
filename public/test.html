@@ -135,14 +135,14 @@
   <div id="map" class="map"></div>
 
   <script type="text/javascript">
-    const LOG = (str) => document.getElementById('console').textContent += str + '\n';
+    var LOG = (str) => document.getElementById('console').textContent += str + '\n';
 
-    const isiOS = navigator.platform.substr(0, 2) === 'iP' ||  // iPhone, iPad, iPod, including simulators.
-      (navigator.userAgent.includes('Mac') && 'ontouchend' in document);  // iPad on iOS 13.
-    const isAndroid = !isiOS && /(android)/i.test(navigator.userAgent);
-    const isDesktop = !isiOS && !isAndroid;
+    var isiOS = navigator.platform.substring(0, 2) === 'iP' ||  // iPhone, iPad, iPod, including simulators.
+      (navigator.userAgent.indexOf('Mac') !== -1 && 'ontouchend' in document);  // iPad on iOS 13.
+    var isAndroid = !isiOS && /(android)/i.test(navigator.userAgent);
+    var isDesktop = !isiOS && !isAndroid;
+
     LOG(`iOS: ${isiOS}, Android: ${isAndroid}, Desktop: ${isDesktop}`);
-
   </script>
 </body>
 
