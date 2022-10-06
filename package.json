@@ -7,7 +7,8 @@
   "scripts": {
     "build": "esbuild src/index.ts --bundle --outfile=workers-site/index.js",
     "test": "eslint src/**/*.ts && tsc --noEmit",
-    "format": "prettier --write 'src/**/*.{ts,tsx,json}' public/*.json"
+    "format": "prettier --write 'src/**/*.{ts,tsx,json}' public/*.json",
+    "upgrade": "npx npm-check-updates -u && npm install"
   },
   "author": "Alexander Borsuk <me@alex.bio>",
   "license": "MIT",
