@@ -5,6 +5,7 @@ type = 'javascript'
 # Organic Maps CF Account ID.
 account_id = '462f578f0939f041e2c24ec99adce458'
 workers_dev = true
+compatibility_date = "2022-10-06"
 
 [site]
 bucket = './public'
