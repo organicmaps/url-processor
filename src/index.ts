@@ -78,7 +78,7 @@ async function handleFetchEvent(event: FetchEvent) {
   // Try to return a static resource first.
   try {
     return await getAssetFromKV(event, getAssetOptions);
-  } catch (_) { }
+  } catch (_) {}
   // No static resource were found, try to handle a specific dynamic request.
   getAssetOptions.mapRequestToAsset = (request: Request) => {
     const url = new URL(request.url);

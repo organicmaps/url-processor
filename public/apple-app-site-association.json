@@ -4,15 +4,84 @@
     "details": [
       {
         "appID": "9Z6432XD7L.app.organicmaps",
-        "paths": ["NOT /", "NOT /app", "NOT /get", "NOT /im_get", "NOT /install", "NOT /test*", "NOT /f", "NOT /fd", "NOT /fdroid", "NOT /g", "NOT /gp", "NOT /google", "NOT /googleplay", "NOT /h", "NOT /hw", "NOT /huawei", "NOT /i", "NOT /ios", "NOT /iphone", "NOT /ipad", "NOT /ipod", "*"]
+        "paths": [
+          "NOT /",
+          "NOT /app",
+          "NOT /get",
+          "NOT /im_get",
+          "NOT /install",
+          "NOT /test*",
+          "NOT /f",
+          "NOT /fd",
+          "NOT /fdroid",
+          "NOT /g",
+          "NOT /gp",
+          "NOT /google",
+          "NOT /googleplay",
+          "NOT /h",
+          "NOT /hw",
+          "NOT /huawei",
+          "NOT /i",
+          "NOT /ios",
+          "NOT /iphone",
+          "NOT /ipad",
+          "NOT /ipod",
+          "*"
+        ]
       },
       {
         "appID": "9Z6432XD7L.app.organicmaps.debug",
-        "paths": ["NOT /", "NOT /app", "NOT /get", "NOT /im_get", "NOT /install", "NOT /test*", "NOT /f", "NOT /fd", "NOT /fdroid", "NOT /g", "NOT /gp", "NOT /google", "NOT /googleplay", "NOT /h", "NOT /hw", "NOT /huawei", "NOT /i", "NOT /ios", "NOT /iphone", "NOT /ipad", "NOT /ipod", "*"]
+        "paths": [
+          "NOT /",
+          "NOT /app",
+          "NOT /get",
+          "NOT /im_get",
+          "NOT /install",
+          "NOT /test*",
+          "NOT /f",
+          "NOT /fd",
+          "NOT /fdroid",
+          "NOT /g",
+          "NOT /gp",
+          "NOT /google",
+          "NOT /googleplay",
+          "NOT /h",
+          "NOT /hw",
+          "NOT /huawei",
+          "NOT /i",
+          "NOT /ios",
+          "NOT /iphone",
+          "NOT /ipad",
+          "NOT /ipod",
+          "*"
+        ]
       },
       {
         "appID": "9Z6432XD7L.app.organicmaps.beta",
-        "paths": ["NOT /", "NOT /app", "NOT /get", "NOT /im_get", "NOT /install", "NOT /test*", "NOT /f", "NOT /fd", "NOT /fdroid", "NOT /g", "NOT /gp", "NOT /google", "NOT /googleplay", "NOT /h", "NOT /hw", "NOT /huawei", "NOT /i", "NOT /ios", "NOT /iphone", "NOT /ipad", "NOT /ipod", "*"]
+        "paths": [
+          "NOT /",
+          "NOT /app",
+          "NOT /get",
+          "NOT /im_get",
+          "NOT /install",
+          "NOT /test*",
+          "NOT /f",
+          "NOT /fd",
+          "NOT /fdroid",
+          "NOT /g",
+          "NOT /gp",
+          "NOT /google",
+          "NOT /googleplay",
+          "NOT /h",
+          "NOT /hw",
+          "NOT /huawei",
+          "NOT /i",
+          "NOT /ios",
+          "NOT /iphone",
+          "NOT /ipad",
+          "NOT /ipod",
+          "*"
+        ]
       }
     ]
   }
