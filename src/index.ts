@@ -21,9 +21,6 @@ const OMAPS_REWRITE_RULES: Record<string, string> = {
   '/get': '/get.html',
   '/im_get': '/get.html',
   '/install': '/get.html',
-  '/news': 'https://organicmaps.app/news',
-  '/test': '/test.html',
-  '/test/': '/test.html',
   '/f': FDROID,
   '/fd': FDROID,
   '/fdroid': FDROID,
@@ -39,6 +36,10 @@ const OMAPS_REWRITE_RULES: Record<string, string> = {
   '/iphone': APPSTORE,
   '/ipad': APPSTORE,
   '/ipod': APPSTORE,
+  '/matrix': 'https://matrix.to/#/#organicmaps:matrix.org',
+  '/news': 'https://organicmaps.app/news',
+  '/test': '/test.html',
+  '/test/': '/test.html',
 };
 
 addEventListener('fetch', (event) => {

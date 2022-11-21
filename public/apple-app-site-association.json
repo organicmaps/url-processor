@@ -26,6 +26,8 @@
           "NOT /iphone",
           "NOT /ipad",
           "NOT /ipod",
+          "NOT /news",
+          "NOT /matrix",
           "*"
         ]
       },
@@ -53,6 +55,8 @@
           "NOT /iphone",
           "NOT /ipad",
           "NOT /ipod",
+          "NOT /news",
+          "NOT /matrix",
           "*"
         ]
       },
@@ -80,6 +84,8 @@
           "NOT /iphone",
           "NOT /ipad",
           "NOT /ipod",
+          "NOT /news",
+          "NOT /matrix",
           "*"
         ]
       }
