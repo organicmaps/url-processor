@@ -30,11 +30,7 @@ npm i
 
 ## Development
 
-Use `npx wrangler dev` for localhost development.
-
-## Preview on workers.dev
-
-Use `npx wrangler preview` to open and test deployed worker in browser.
+Use `npx wrangler dev` for development using Cloudflare, or `npx wrangler dev --local` for localhost development.
 
 ## Deployment
 

@@ -6,12 +6,12 @@
     "moduleResolution": "node",
     "target": "ESNext",
     "lib": [
-      "ESNext",
-      "webworker"
+      "ESNext"
     ],
     "alwaysStrict": true,
     "strict": true,
     "preserveConstEnums": true,
+    "skipLibCheck": true,
     "sourceMap": true,
     "esModuleInterop": true,
     "types": [

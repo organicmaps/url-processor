@@ -44,7 +44,7 @@ const OMAPS_REWRITE_RULES: Record<string, string> = {
 addEventListener('fetch', (event) => {
   try {
     event.respondWith(handleFetchEvent(event));
-  } catch (e) {
+  } catch (e: any) {
     if (DEBUG) {
       event.respondWith(new Response(e.message || e.toString(), { status: 500 }));
     } else {
