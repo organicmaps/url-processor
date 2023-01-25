@@ -38,6 +38,7 @@ const OMAPS_REWRITE_RULES: Record<string, string> = {
   '/ipod': APPSTORE,
   '/matrix': 'https://matrix.to/#/#organicmaps:matrix.org',
   '/news': 'https://organicmaps.app/news',
+  '/tr/news': 'https://organicmaps.app/tr/news',
   '/test': '/test.html',
   '/test/': '/test.html',
 };
