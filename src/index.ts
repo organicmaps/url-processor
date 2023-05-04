@@ -89,5 +89,11 @@ async function handleFetchEvent(event: FetchEvent) {
   };
   const resp = await getAssetFromKV(event, getAssetOptions);
   const ge0HtmlTemplate = await resp.text();
-  return onGe0Decode(ge0HtmlTemplate, event.request.url);
+  try {
+    // await to catch exceptions.
+    const htmlResponse = await onGe0Decode(ge0HtmlTemplate, event.request.url);
+    return htmlResponse;
+  } catch (err) {
+    return new Response(String(err), { status: 500 });
+  }
 }
