@@ -9,14 +9,7 @@ function replaceInTemplate(template: string, data: Record<string, any>) {
   return template.replace(pattern, (_, token) => data[token] || '');
 }
 
-// Throws on decode error.
-export async function onGe0Decode(template: string, url: string): Promise<Response> {
-  const { pathname, search, hash } = new URL(url);
-  // Filter empty pathname elements.
-  const params = pathname.split('/').filter(Boolean);
-  const encodedLatLonZoom = params[0];
-  let name = params.length > 1 ? params[1] : undefined;
-  const llz = decodeLatLonZoom(encodedLatLonZoom);
+function normalizeNameAndTitle(name: string | undefined): [string, string] {
   let title = 'Organic Maps';
   if (name) {
     name = decodeURIComponent(name.replace(/\+|_/g, ' '));
@@ -25,6 +18,46 @@ export async function onGe0Decode(template: string, url: string): Promise<Respon
   } else {
     name = 'Shared via <a href="https://organicmaps.app">Organic Maps</a>';
   }
+  return [name, title];
+}
+
+function normalizeZoom(zoom: string): number {
+  const DEFAULT_ZOOM = 14;
+  const z = parseInt(zoom);
+  if (isNaN(z)) return DEFAULT_ZOOM;
+  if (z < 1 || z > 19) return DEFAULT_ZOOM;
+  return z;
+}
+
+// Coordinates and zoom are validated separately.
+const CLEAR_COORDINATES_REGEX =
+  /(?<lat>-?\d+\.\d+)[^\d.](?<lon>-?\d+\.\d+)(?:[^\d.](?<zoom>\d{1,2}))?(?:[^\d.](?<name>.+))?/;
+
+// Throws on decode error.
+export async function onGe0Decode(template: string, url: string): Promise<Response> {
+  const { pathname, search, hash } = new URL(url);
+
+  const m = pathname.match(CLEAR_COORDINATES_REGEX);
+  if (m && m.groups) {
+    const llz = { lat: Number(m.groups.lat), lon: Number(m.groups.lon), zoom: normalizeZoom(m.groups.zoom) };
+    if (llz.lat <= -90.0 || llz.lat >= 90.0 || llz.lon <= -180.0 || llz.lon >= 180.0)
+      throw new Error(`Invalid coordinates ${m.groups.lat} and ${m.groups.lon}`);
+
+    const [name, title] = normalizeNameAndTitle(m.groups.name);
+    template = replaceInTemplate(template, {
+      ...llz,
+      title,
+      name,
+      path: pathname + search + hash, // Starts with a slash
+    });
+    return new Response(template, { headers: { 'content-type': 'text/html' } });
+  }
+
+  // Filter empty pathname elements.
+  const params = pathname.split('/').filter(Boolean);
+  const encodedLatLonZoom = params[0];
+  const llz = decodeLatLonZoom(encodedLatLonZoom);
+  const [name, title] = normalizeNameAndTitle(params.length > 1 ? params[1] : undefined);
 
   template = replaceInTemplate(template, {
     ...llz,
@@ -69,7 +102,7 @@ function decodeLatLonZoom(encodedLatLonZoom: string): LatLonZoom {
   lon = Math.round(lon * 1e5) / 1e5;
 
   if (lat <= -90.0 || lat >= 90.0 || lon <= -180.0 || lon >= 180.0)
-    throw new Error('Invalid coordinates: the url was not encoded properly');
+    throw new Error(`Invalid coordinates ${encodedLatLonZoom}, the url was not encoded properly`);
 
   return { lat, lon, zoom };
 }
