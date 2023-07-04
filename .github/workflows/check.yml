@@ -1,0 +1,31 @@
+name: Checks
+
+on:
+  workflow_dispatch: {}
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  checks:
+    name: Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Dependencies
+        run: npm ci
+
+      - name: Format
+        run: npm run format
+
+      - name: Test
+        run: npm run build
