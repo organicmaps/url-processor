@@ -4,7 +4,7 @@ name = 'url-processor'
 # Organic Maps CF Account ID.
 account_id = '462f578f0939f041e2c24ec99adce458'
 workers_dev = true
-compatibility_date = '2022-11-21'
+compatibility_date = '2023-07-05'
 main = './workers-site/index.js'
 
 [site]
