@@ -53,6 +53,25 @@ function normalizeZoom(zoom: string): number {
   return z;
 }
 
+const htmlEntityCode = {
+  ' ': '&nbsp;',
+  '¢': '&cent;',
+  '£': '&pound;',
+  '¥': '&yen;',
+  '€': '&euro;',
+  '©': '&copy;',
+  '®': '&reg;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  '&': '&amp;',
+  "'": '&apos;',
+};
+
+function encodeHTML(str: string) {
+  return str.replace(/[\u00A0-\u9999<>\&''""]/gm, (i) => htmlEntityCode[i]);
+}
+
 // Coordinates and zoom are validated separately.
 const CLEAR_COORDINATES_REGEX =
   /(?<lat>-?\d+\.\d+)[^\d.](?<lon>-?\d+\.\d+)(?:[^\d.](?<zoom>\d{1,2}))?(?:[^\d.](?<name>.+))?/;
@@ -81,7 +100,10 @@ export async function onGe0Decode(template: string, url: string): Promise<Respon
   const params = pathname.split('/').filter(Boolean);
   const encodedLatLonZoom = params[0];
   const llz = decodeLatLonZoom(encodedLatLonZoom);
-  const [name, title] = normalizeNameAndTitle(params.length > 1 ? params[1] : undefined);
+  let [name, title] = normalizeNameAndTitle(params.length > 1 ? params[1] : undefined);
+  // XSS prevention.
+  name = encodeHTML(name);
+  title = encodeHTML(title);
 
   template = replaceInTemplate(template, {
     ...llz,
