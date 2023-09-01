@@ -19,6 +19,8 @@ function fromWindows1251(percentEncoded: string) {
   );
 }
 
+const kSharedViaOM = 'Shared via <a href="https://organicmaps.app">Organic Maps</a>';
+
 function normalizeNameAndTitle(name: string | undefined): [string, string] {
   let title = 'Organic Maps';
   if (name) {
@@ -40,7 +42,7 @@ function normalizeNameAndTitle(name: string | undefined): [string, string] {
     name = name.replace("'", '&rsquo;'); // To embed in popup.
     title = name + ' | ' + title;
   } else {
-    name = 'Shared via <a href="https://organicmaps.app">Organic Maps</a>';
+    name = kSharedViaOM;
   }
   return [name, title];
 }
@@ -102,7 +104,8 @@ export async function onGe0Decode(template: string, url: string): Promise<Respon
   const llz = decodeLatLonZoom(encodedLatLonZoom);
   let [name, title] = normalizeNameAndTitle(params.length > 1 ? params[1] : undefined);
   // XSS prevention.
-  name = encodeHTML(name);
+  if (name != kSharedViaOM)
+    name = encodeHTML(name);
   title = encodeHTML(title);
 
   template = replaceInTemplate(template, {
