@@ -30,7 +30,7 @@ npm i
 
 ## Development
 
-Use `npx wrangler dev` for development using Cloudflare, or `npx wrangler dev --local` for localhost development.
+Use `npx wrangler dev` for localhost development.
 
 ## Deployment
 

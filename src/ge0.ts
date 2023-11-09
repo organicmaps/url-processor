@@ -56,7 +56,7 @@ function normalizeZoom(zoom: string): number {
 }
 
 const htmlEntityCode = {
-  ' ': '&nbsp;',
+  ' ': '&nbsp;',
   '¢': '&cent;',
   '£': '&pound;',
   '¥': '&yen;',
@@ -71,7 +71,7 @@ const htmlEntityCode = {
 };
 
 function encodeHTML(str: string) {
-  return str.replace(/[\u00A0-\u9999<>\&''""]/gm, (i) => htmlEntityCode[i]);
+  return str.replace(/[ ¢£¥€©®<>\&'"]/gm, (i) => htmlEntityCode[i]);
 }
 
 // Coordinates and zoom are validated separately.
@@ -104,8 +104,7 @@ export async function onGe0Decode(template: string, url: string): Promise<Respon
   const llz = decodeLatLonZoom(encodedLatLonZoom);
   let [name, title] = normalizeNameAndTitle(params.length > 1 ? params[1] : undefined);
   // XSS prevention.
-  if (name != kSharedViaOM)
-    name = encodeHTML(name);
+  if (name != kSharedViaOM) name = encodeHTML(name);
   title = encodeHTML(title);
 
   template = replaceInTemplate(template, {
