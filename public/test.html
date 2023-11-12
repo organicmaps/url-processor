@@ -134,12 +134,16 @@
 
   <h3><a href="https://en.wikipedia.org/wiki/Geo_URI_scheme">Geo url scheme</a></h3>
   <ol>
-    <li><a href="geo:37.786971,-122.399677">geo:37.786971,-122.399677</a></li>
-    <li><a href="geo:37.786971,-122.399677,1000">geo:37.786971,-122.399677,1000</a></li>
-    <li><a href="geo:37.786971,-122.399677;u=35">geo:37.786971,-122.399677;u=35</a></li>
-    <li><a href="geo:37.786971,-122.399677;z=17">geo:37.786971,-122.399677;z=17</a></li>
-    <li><a href="geo:0,0?q=37.78918,-122.40335">geo:0,0?q=37.78918,-122.40335</a></li>
-    <li><a href="geo:0,0?q=37.78918,-122.40335&z=16">geo:0,0?q=37.78918,-122.40335&z=16</a></li>
+    <li><a href="geo:37.786971,-122.399677">geo:37.786971,-122.399677</a> - show a point in San Francisco.</li>
+    <li><a href="geo:37.786971,-122.399677,1000">geo:37.786971,-122.399677,1000</a> - show a point in San Francisco; altitude=1000 is ignored</li>
+    <li><a href="geo:37.786971,-122.399677;u=35">geo:37.786971,-122.399677;u=35</a> - show a point in San Francisco; u=35 is ignored</li>
+    <li><a href="geo:37.786971,-122.399677?z=17">geo:37.786971,-122.399677?z=17</a> - show a point in San Francisco with zoom=17</li>
+    <li><a href="geo:0,0?q=37.78918,-122.40335">geo:0,0?q=37.78918,-122.40335</a> - show a point in San Francisco</li>
+    <li><a href="geo:0,0?q=37.78918,-122.40335&z=16">geo:0,0?q=37.78918,-122.40335&z=16</a> - show a point in San Francisco with zoom=16</li>
+    <li><a href="geo:35.341714,33.32231(Custom%20Title)">geo:35.341714,33.32231(Custom%20Title)</a> - show a point with 'Custom Title' in Kyrenia</li>
+    <li><a href="geo:35.3381607,33.3290564?q=Kyrenia%20Castle">geo:35.3381607,33.3290564?q=Kyrenia%20Castle</a> - search for 'Kyrenia Castle' in 35.3381607,33.3290564</li>
+    <li><a href="geo:0,0?q=Where%20to%20eat">geo:0,0?q=Where%20to%20eat</a> - search for 'Where to eat' in the current (last) location</li>
+    <li><a href="geo:0,0(Null%20Island)">geo:0,0(Null%20Island)</a> - show 0,0 point in Atlantic Ocean with 'Null Island' title</li>
   </ol>
 
   <h3>MAPS.ME url scheme</h3>
@@ -167,9 +171,7 @@
   <h3>OpenStreetMap url scheme</h3>
   <ol>
     <li><a href="https://www.openstreetmap.org/#map=16/33.89041/35.50664">https://www.openstreetmap.org/#map=16/33.89041/35.50664</a></li>
-    <li><a href="https://openstreetmap.org/#map=16/33.89041/35.50664">https://openstreetmap.org/#map=16/33.89041/35.506641</a></li>
     <li><a href="https://www.openstreetmap.org/search?query=Falafel%20Sahyoun#map=19/33.89041/35.50665">https://www.openstreetmap.org/search?query=Falafel%20Sahyoun#map=19/33.89041/35.50665</a></li>
-    <li><a href="https://openstreetmap.org/search?query=Falafel%20Sahyoun#map=19/33.89041/35.50665">https://openstreetmap.org/search?query=Falafel%20Sahyoun#map=19/33.89041/35.50665</a></li>
   </ol>
 
   <h3>2GIS url scheme</h3>
