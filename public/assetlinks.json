@@ -5,8 +5,10 @@
       "namespace": "android_app",
       "package_name": "app.organicmaps",
       "sha256_cert_fingerprints": [
-        "B9:C7:AE:79:A5:A9:02:70:DF:08:A1:32:E5:36:B9:C6:66:F5:BE:F1:F5:9B:30:4F:CE:CF:86:87:86:5E:4B:5B",
-        "9D:5A:95:65:8F:EC:4E:A2:FD:C1:E0:A6:96:E3:69:E5:B9:38:D2:E3:0A:28:ED:FF:50:AE:99:BD:A2:7E:8F:A3"
+        "9D:5A:95:65:8F:EC:4E:A2:FD:C1:E0:A6:96:E3:69:E5:B9:38:D2:E3:0A:28:ED:FF:50:AE:99:BD:A2:7E:8F:A3",
+        "E5:D3:CC:33:89:5A:93:BC:95:99:60:97:49:3F:91:E7:E5:BA:FE:E9:6F:58:17:C1:E2:EF:E5:83:EE:73:CB:B8",
+        "E2:16:FC:38:6C:32:7E:C8:8D:05:60:26:F1:DE:A2:7B:E2:BC:3F:9D:7E:E9:56:E4:36:1C:4B:64:EC:45:9F:E9",
+        "B9:C7:AE:79:A5:A9:02:70:DF:08:A1:32:E5:36:B9:C6:66:F5:BE:F1:F5:9B:30:4F:CE:CF:86:87:86:5E:4B:5B"
       ]
     }
   },
@@ -25,36 +27,6 @@
     "target": {
       "namespace": "android_app",
       "package_name": "app.organicmaps.debug",
-      "sha256_cert_fingerprints": [
-        "96:D6:28:81:78:B0:1B:86:9B:D3:FF:BF:95:B3:3B:EE:DE:23:01:68:DF:88:2A:1D:7A:4B:B2:8B:85:34:59:F4"
-      ]
-    }
-  },
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "app.organicmaps.web",
-      "sha256_cert_fingerprints": [
-        "B9:C7:AE:79:A5:A9:02:70:DF:08:A1:32:E5:36:B9:C6:66:F5:BE:F1:F5:9B:30:4F:CE:CF:86:87:86:5E:4B:5B"
-      ]
-    }
-  },
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "app.organicmaps.web.beta",
-      "sha256_cert_fingerprints": [
-        "B9:C7:AE:79:A5:A9:02:70:DF:08:A1:32:E5:36:B9:C6:66:F5:BE:F1:F5:9B:30:4F:CE:CF:86:87:86:5E:4B:5B"
-      ]
-    }
-  },
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "app.organicmaps.web.debug",
       "sha256_cert_fingerprints": [
         "96:D6:28:81:78:B0:1B:86:9B:D3:FF:BF:95:B3:3B:EE:DE:23:01:68:DF:88:2A:1D:7A:4B:B2:8B:85:34:59:F4"
       ]
