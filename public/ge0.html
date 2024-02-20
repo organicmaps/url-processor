@@ -9,9 +9,9 @@
 
   <meta name="apple-itunes-app" content="app-id=1567437057, app-argument=om:/${path}">
 
-  <meta name="description" content="Android & iOS offline maps app for travelers, tourists, hikers, and cyclists based on top of crowd-sourced OpenStreetMap data and curated with love by MAPS.ME founders.">
-  <meta itemprop="name" content="Android & iOS offline maps app for travelers, tourists, hikers, and cyclists based on top of crowd-sourced OpenStreetMap data and curated with love by MAPS.ME founders.">
-  <meta itemprop="description" content="Android & iOS offline maps app for travelers, tourists, hikers, and cyclists based on top of crowd-sourced OpenStreetMap data and curated with love by MAPS.ME founders.">
+  <meta name="description" content="Free Android & iOS offline OSM (OpenStreetMap) maps app for travelers, tourists, drivers, hikers, and cyclists from creators of MAPS.ME (MapsWithMe).">
+  <meta itemprop="name" content="Free Android & iOS offline OSM (OpenStreetMap) maps app for travelers, tourists, drivers, hikers, and cyclists from creators of MAPS.ME (MapsWithMe).">
+  <meta itemprop="description" content="Free Android & iOS offline OSM (OpenStreetMap) maps app for travelers, tourists, drivers, hikers, and cyclists from creators of MAPS.ME (MapsWithMe).">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
@@ -33,7 +33,7 @@
       display: flex;
       flex-flow: column;
     }
-    
+
     .link {
       border-radius: 25px;
       border: 1px solid #449f33;
@@ -41,7 +41,7 @@
       margin-bottom: 2px;
       display: inline-block;
     }
-    
+
     .linkcolour {
       border-radius: 25px;
       padding: 5px;
@@ -52,13 +52,13 @@
       vertical-align: middle;
       display: inline-block;
     }
-    
+
     .linkcolour:hover {
       background-color: #449f33;
       color: #FFF;
       cursor: pointer;
     }
-    
+
     .linkcolour:active {
       background-color: #24541b;
     }
@@ -78,7 +78,7 @@
     }
 
     #logo {
-      vertical-align: middle; 
+      vertical-align: middle;
       height: 2em;
       flex-flow: row wrap;
       align-items: center;
@@ -87,7 +87,7 @@
       justify-content: space-between;
       overflow-wrap: break-word;
     }
-    
+
     #name {
       flex: 1;
       font-size: x-large;
@@ -98,7 +98,7 @@
       flex: 1 1 auto;
       z-index: 1;
     }
-    
+
     #notif {
       z-index: 1000;
       border-radius: 25px;
@@ -107,20 +107,20 @@
       padding-right: 10px;
       overflow-wrap: break-word;
       box-shadow: 0 3px 10px 0 #00000030;
-      visibility: hidden; 
+      visibility: hidden;
       background-color: #FFF;
       color: #449f33;
       position: absolute;
       transform: translateX(-50%);
       left: 50%;
       top: 10%;
-    }    
-          
+    }
+
     #notif.show {
       visibility: visible;
       animation: fadein 0.5s, fadeout 0.5s 1s;
     }
-    
+
     @keyframes fadein {
       from { opacity: 0; }
       to { opacity: 1; }
@@ -178,12 +178,12 @@
 
     if (isMobile) {
       document.getElementById('geolink').removeAttribute('onclick');
-      
+
       if(!isiOS) {
         document.getElementById('install').remove();
       }
     };
-    
+
     function openStore() {
       window.location='/get.html';
     }
@@ -194,7 +194,7 @@
         setTimeout(openStore, 700);
       }
     }
-    
+
     function copyCoords() {
       var el = document.getElementById("notif");
       el.className = "show";
