@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+  <meta name="apple-itunes-app" content="app-id=1567437057">
+
+  <meta name="description" content="Free Android & iOS offline OSM (OpenStreetMap) maps app for travelers, tourists, drivers, hikers, and cyclists from creators of MAPS.ME (MapsWithMe).">
+  <meta itemprop="name" content="Free Android & iOS offline OSM (OpenStreetMap) maps app for travelers, tourists, drivers, hikers, and cyclists from creators of MAPS.ME (MapsWithMe).">
+  <meta itemprop="description" content="Free Android & iOS offline OSM (OpenStreetMap) maps app for travelers, tourists, drivers, hikers, and cyclists from creators of MAPS.ME (MapsWithMe).">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+  <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#449f33">
+
+  <title>Install Beta version of Organic Maps</title>
+
+  <script type="text/javascript">
+    // Needed for some old browsers on Android 5 together with vars (no const and let!).
+    if (!('includes' in String.prototype)) {
+      String.prototype.includes = function (str) {
+        return this.indexOf(str) !== -1;
+      }
+    }
+    var defaultUrl = 'https://organicmaps.app/#community';
+    // Should match the links on the website above.
+    var betaAndroidFirebase = 'https://appdistribution.firebase.dev/i/f3e918f9abc40c9c';
+    var betaTestFlight = 'https://testflight.apple.com/join/lrKCl08I';
+
+    var isiOS = navigator.platform.substring(0, 2) === 'iP' ||  // iPhone, iPad, iPod, including simulators.
+      (navigator.userAgent.includes('Mac') && 'ontouchend' in document);  // iPad on iOS 13+.
+
+    var isAndroid = !isiOS && /(android)/i.test(navigator.userAgent);
+    var isDesktop = !isiOS && !isAndroid;
+
+    var redirectUrl = defaultUrl;
+    var path = new URL(window.location.href).pathname.toLowerCase();
+
+    if (isAndroid) {
+      redirectUrl = betaAndroidFirebase;
+    } else if (isiOS) {
+      redirectUrl = betaTestFlight;
+    }
+    window.open(redirectUrl, '_self');
+  </script>
+
+  <style>
+    html,
+    body {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      color: white;
+    }
+
+    p {
+      margin: 1rem;
+    }
+
+    a,
+    a:link,
+    a:visited {
+      color: limegreen;
+    }
+
+    a:hover,
+    a:active {
+      color: lime;
+    }
+  </style>
+
+</head>
+
+<body>
+  <h1>Redirecting to Organic Maps Beta installation page...</h1>
+  <p>
+    <a href="https://organicmaps.app">Organic Maps</a> is an Android & iOS offline maps app
+    for travelers, tourists, hikers, and cyclists based on top of crowd-sourced
+    <a href="https://openstreetmap.org">OpenStreetMap</a> data and curated with love by <strong>MAPS.ME</strong> founders.
+  </p>
+  <p>
+    <a href="https://play.google.com/store/apps/details?id=app.organicmaps">
+      <img src="https://raw.githubusercontent.com/organicmaps/organicmaps/master/docs/badges/google-play.png" width="180">
+    </a>
+    <a href="https://f-droid.org/en/packages/app.organicmaps/">
+      <img src="https://raw.githubusercontent.com/organicmaps/organicmaps/master/docs/badges/fdroid.png" width="180">
+    </a>
+    <a href="https://appgallery.huawei.com/#/app/C104325611">
+      <img src="https://raw.githubusercontent.com/organicmaps/organicmaps/master/docs/badges/huawei-appgallery.png" width="180">
+    </a>
+    <a href="https://apps.apple.com/app/id1567437057">
+      <img src="https://raw.githubusercontent.com/organicmaps/organicmaps/master/docs/badges/apple-appstore.png" width="180">
+    </a>
+  </p>
+
+</body>
+
+</html>

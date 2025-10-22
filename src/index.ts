@@ -18,6 +18,7 @@ const OMAPS_REWRITE_RULES: Record<string, string> = {
   '/.well-known/assetlinks.json': '/assetlinks.json',
   '/': '/get.html',
   '/app': '/get.html',
+  '/beta': '/beta.html',
   '/get': '/get.html',
   '/im_get': '/get.html',
   '/install': '/get.html',
