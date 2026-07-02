@@ -1,6 +1,4 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI agents when working with code in this repository.
 
 ## What this is
 
@@ -26,11 +24,11 @@ npx wrangler deploy --env omaps   # manual prod deploy (README shows the older `
 
 ## Testing
 
-`npm test` runs Jest. TypeScript is transpiled by a tiny esbuild-based transformer (`test/esbuild-transform.cjs`, wired via `jest.config.js`) — the same bundler as the production build, so there is **no ts-jest/babel dependency** (those don't currently resolve against the repo's eslint 10 / jest 30 peers). Tests live in `test/*.test.ts` and import straight from `src/`.
+`npm test` runs Jest. TypeScript is transpiled by a tiny esbuild-based transformer (`test/esbuild-transform.cjs`, wired via `jest.config.js`) — the same bundler as the production build, so there is **no ts-jest/babel dependency** to keep in sync with TypeScript (the repo is on TS 6 / ESLint 10, and ts-jest tends to lag TypeScript majors). Tests live in `test/*.test.ts` and import straight from `src/`.
 
 `test/api.test.ts` covers the pure units — `decodeLatLonZoom`, `normalizeZoom`, `normalizeNameAndTitle` (including the Windows-1251 fallback), `CLEAR_COORDINATES_REGEX` — plus `onGe0Decode` end-to-end (encoded + clear-text paths, HTML-escaping, out-of-range rejection). To test a new helper, **`export` it from `src/ge0.ts`** — only exported symbols are reachable from tests. Run one test with `npx jest -t '<name substring>'`.
 
-Note: `npm run lint` (`tsc` + eslint) is currently **red on pre-existing issues** (`no-explicit-any`, unused `catch` bindings) unrelated to the tests — CI does not run it.
+`npm run lint` (ESLint over `src/` + `tsc --noEmit`) is expected to pass — **CI runs it on PRs** — so treat a lint failure as a real regression, not pre-existing noise.
 
 ## Request pipeline — `src/index.ts`
 
@@ -74,4 +72,4 @@ So a rewrite rule you add will "work everywhere" in dev but only fire on `omaps.
 
 - `workers-site/index.js` is the **esbuild output and is gitignored** — never edit it by hand; edit `src/` and rebuild. `wrangler.toml`'s `[build]` step runs `npm run build` automatically on deploy.
 - Pushing to `master` triggers `.github/workflows/deploy-master-to-prod.yml`, which deploys the **`omaps` (production)** environment via `cloudflare/wrangler-action`.
-- CI (`.github/workflows/check.yml`) runs on PRs with **Node 20** (note: `.nvmrc` pins the older `v17.3.1`) and runs `npm run format`, `npm run build`, then `npm test`.
+- CI (`.github/workflows/check.yml`) runs on PRs with **Node 24** (matching `.nvmrc`) and runs `npm run format`, `npm run lint`, `npm run build`, then `npm test`.
