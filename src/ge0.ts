@@ -108,7 +108,7 @@ function renderTemplate(template: string, llz: LatLonZoom, name: string, title: 
 
 // Coordinates and zoom are validated separately.
 export const CLEAR_COORDINATES_REGEX =
-  /(?<lat>-?\d+\.\d+)[^\d.](?<lon>-?\d+\.\d+)(?:[^\d.](?<zoom>\d{1,2}))?(?:[^\d.](?<name>.+))?/;
+  /(?<lat>-?\d+\.\d+)[^.](?<lon>-?\d+\.\d+)(?:[^.](?<zoom>\d{1,2}))?(?:[^\d.](?<name>.+))?/;
 
 // Throws on decode error.
 export async function onGe0Decode(template: string, url: string): Promise<Response> {
