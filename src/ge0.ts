@@ -4,18 +4,16 @@ declare type LatLonZoom = {
   zoom: number;
 };
 
-function replaceInTemplate(template: string, data: Record<string, any>) {
+function replaceInTemplate(template: string, data: Record<string, string | number>) {
   const pattern = /\${\s*(\w+?)\s*}/g;
-  return template.replace(pattern, (_, token) => data[token] || '');
+  return template.replace(pattern, (_, token) => String(data[token] ?? ''));
 }
 
 function fromWindows1251(percentEncoded: string) {
   const decoder = new TextDecoder('windows-1251', { fatal: true, ignoreBOM: false });
   // https://stackoverflow.com/a/69769015
-  return percentEncoded.replace(
-    /(?:%[0-9A-F]{2})+/g,
-    // @ts-expect-error JS allows typed arrays from string arrays, but TS doesn't know that.
-    (s) => decoder.decode(Uint8Array.from(s.replaceAll('%', ',0x').slice(1).split(','))),
+  return percentEncoded.replace(/(?:%[0-9A-F]{2})+/g, (s) =>
+    decoder.decode(Uint8Array.from(s.replaceAll('%', ',0x').slice(1).split(','), (h) => Number(h))),
   );
 }
 
@@ -27,14 +25,14 @@ export function normalizeNameAndTitle(name: string | undefined): [string, string
     name = name.replace(/\+|_/g, ' '); // Convert underscores back to spaces.
     try {
       name = decodeURIComponent(name);
-    } catch (ex: any) {
+    } catch {
       try {
         // There are some cases when coordinates are correct, but the name is not encoded properly, for example:
         // %DF%F0%EA%EE%E2%F1%EA%EE%E5_%F3%F7%E0%F1%F2%EA%EE%E2%EE%E5_%EB%E5%F1%ED%E8%F7%E5%F1%F2%E2%EE
         // %C8%EB%EE%E2%E0%E9%F1%EA%EE%E5_%F3%F7%E0%F1%F2%EA%EE%E2%EE%E5_%EB%E5%F1%ED%E8%F7%E5%F1%F2%E2%EE
         // Looks like vk.com incorrectly uses Windows-1251 to encode some shared links when querying previews.
         name = fromWindows1251(name);
-      } catch (ex: any) {
+      } catch {
         name = '😃';
       }
     }
@@ -53,7 +51,7 @@ export function normalizeZoom(zoom: string): number {
   return z;
 }
 
-const htmlEntityCode = {
+const htmlEntityCode: Record<string, string> = {
   ' ': '&nbsp;',
   '¢': '&cent;',
   '£': '&pound;',

@@ -47,9 +47,10 @@ const OMAPS_REWRITE_RULES: Record<string, string> = {
 addEventListener('fetch', (event) => {
   try {
     event.respondWith(handleFetchEvent(event));
-  } catch (e: any) {
+  } catch (e) {
     if (DEBUG) {
-      event.respondWith(new Response(e.message || e.toString(), { status: 500 }));
+      const message = e instanceof Error ? e.message : String(e);
+      event.respondWith(new Response(message, { status: 500 }));
     } else {
       // In case of unexpected errors, always redirect to the default url.
       event.respondWith(Response.redirect(NOT_FOUND_REDIRECT_URL, 302));
@@ -81,7 +82,7 @@ async function handleFetchEvent(event: FetchEvent) {
   // Try to return a static resource first.
   try {
     return await getAssetFromKV(event, getAssetOptions);
-  } catch (_) {}
+  } catch {}
   // No static resource were found, try to handle a specific dynamic request.
   getAssetOptions.mapRequestToAsset = (request: Request) => {
     const url = new URL(request.url);

@@ -2,8 +2,8 @@
   "compilerOptions": {
     "isolatedModules": true,
     "outDir": "./dist",
-    "module": "ES6",
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "target": "ESNext",
     "lib": [
       "ESNext"

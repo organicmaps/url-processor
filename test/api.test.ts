@@ -87,6 +87,12 @@ describe('onGe0Decode — end to end', () => {
     expect(html).toContain('<path>/B4srhdHVVt/Some+Name</path>');
   });
 
+  test('renders a zero coordinate instead of blanking it', async () => {
+    // AwAAAAAAAA decodes to 0,0 — must render "0", not an empty string.
+    const html = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/AwAAAAAAAA')).text();
+    expect(html).toContain('<coords>0,0@4</coords>');
+  });
+
   test('renders clear-text coordinates', async () => {
     const html = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/53.9,27.56,15,Minsk')).text();
     expect(html).toContain('<coords>53.9,27.56@15</coords>');
