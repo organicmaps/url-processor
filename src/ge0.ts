@@ -21,7 +21,7 @@ function fromWindows1251(percentEncoded: string) {
 
 const kSharedViaOM = 'Shared via <a href="https://organicmaps.app">Organic Maps</a>';
 
-function normalizeNameAndTitle(name: string | undefined): [string, string] {
+export function normalizeNameAndTitle(name: string | undefined): [string, string] {
   let title = 'Organic Maps';
   if (name) {
     name = name.replace(/\+|_/g, ' '); // Convert underscores back to spaces.
@@ -38,8 +38,6 @@ function normalizeNameAndTitle(name: string | undefined): [string, string] {
         name = '😃';
       }
     }
-
-    name = name.replace("'", '&rsquo;'); // To embed in popup.
     title = name + ' | ' + title;
   } else {
     name = kSharedViaOM;
@@ -47,7 +45,7 @@ function normalizeNameAndTitle(name: string | undefined): [string, string] {
   return [name, title];
 }
 
-function normalizeZoom(zoom: string): number {
+export function normalizeZoom(zoom: string): number {
   const DEFAULT_ZOOM = 14;
   const z = parseInt(zoom);
   if (isNaN(z)) return DEFAULT_ZOOM;
@@ -74,13 +72,48 @@ function encodeHTML(str: string) {
   return str.replace(/[ ¢£¥€©®<>\&'"]/gm, (i) => htmlEntityCode[i]);
 }
 
+function encodeJavaScriptString(str: string) {
+  return JSON.stringify(str).replace(/[<>&\u2028\u2029]/g, (char) => {
+    switch (char) {
+      case '<':
+        return '\\u003C';
+      case '>':
+        return '\\u003E';
+      case '&':
+        return '\\u0026';
+      case '\u2028':
+        return '\\u2028';
+      case '\u2029':
+        return '\\u2029';
+      default:
+        return char;
+    }
+  });
+}
+
+function renderTemplate(template: string, llz: LatLonZoom, name: string, title: string, path: string) {
+  const nameHtml = name == kSharedViaOM ? name : encodeHTML(name);
+  const appUri = `om:/${path}`;
+  template = replaceInTemplate(template, {
+    ...llz,
+    title: encodeHTML(title),
+    name: nameHtml,
+    nameJs: encodeJavaScriptString(nameHtml),
+    path: encodeHTML(path),
+    appUriAttr: encodeHTML(appUri),
+    appUriJs: encodeJavaScriptString(appUri),
+  });
+  return new Response(template, { headers: { 'content-type': 'text/html' } });
+}
+
 // Coordinates and zoom are validated separately.
-const CLEAR_COORDINATES_REGEX =
+export const CLEAR_COORDINATES_REGEX =
   /(?<lat>-?\d+\.\d+)[^\d.](?<lon>-?\d+\.\d+)(?:[^\d.](?<zoom>\d{1,2}))?(?:[^\d.](?<name>.+))?/;
 
 // Throws on decode error.
 export async function onGe0Decode(template: string, url: string): Promise<Response> {
   const { pathname, search, hash } = new URL(url);
+  const path = pathname + search + hash; // Starts with a slash.
 
   const m = pathname.match(CLEAR_COORDINATES_REGEX);
   if (m && m.groups) {
@@ -89,35 +122,19 @@ export async function onGe0Decode(template: string, url: string): Promise<Respon
       throw new Error(`Invalid coordinates ${m.groups.lat} and ${m.groups.lon}`);
 
     const [name, title] = normalizeNameAndTitle(m.groups.name);
-    template = replaceInTemplate(template, {
-      ...llz,
-      title,
-      name,
-      path: pathname + search + hash, // Starts with a slash
-    });
-    return new Response(template, { headers: { 'content-type': 'text/html' } });
+    return renderTemplate(template, llz, name, title, path);
   }
 
   // Filter empty pathname elements.
   const params = pathname.split('/').filter(Boolean);
   const encodedLatLonZoom = params[0];
   const llz = decodeLatLonZoom(encodedLatLonZoom);
-  let [name, title] = normalizeNameAndTitle(params.length > 1 ? params[1] : undefined);
-  // XSS prevention.
-  if (name != kSharedViaOM) name = encodeHTML(name);
-  title = encodeHTML(title);
-
-  template = replaceInTemplate(template, {
-    ...llz,
-    title,
-    name,
-    path: pathname + search + hash, // Starts with a slash
-  });
-  return new Response(template, { headers: { 'content-type': 'text/html' } });
+  const [name, title] = normalizeNameAndTitle(params.length > 1 ? params[1] : undefined);
+  return renderTemplate(template, llz, name, title, path);
 }
 
 // Throws exceptions on errors.
-function decodeLatLonZoom(encodedLatLonZoom: string): LatLonZoom {
+export function decodeLatLonZoom(encodedLatLonZoom: string): LatLonZoom {
   const GE0_MAX_POINT_BYTES = 10;
   const GE0_MAX_COORD_BITS = GE0_MAX_POINT_BYTES * 3;
 

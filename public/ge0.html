@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-  <meta name="apple-itunes-app" content="app-id=1567437057, app-argument=om:/${path}">
+  <meta name="apple-itunes-app" content="app-id=1567437057, app-argument=${appUriAttr}">
 
   <meta name="description" content="Free Android & iOS offline OSM (OpenStreetMap) maps app for travelers, tourists, drivers, hikers, and cyclists from creators of MAPS.ME (MapsWithMe).">
   <meta itemprop="name" content="Free Android & iOS offline OSM (OpenStreetMap) maps app for travelers, tourists, drivers, hikers, and cyclists from creators of MAPS.ME (MapsWithMe).">
@@ -189,7 +189,7 @@
     }
 
     function triggerApp() {
-      window.location='om:/${path}';
+      window.location=${appUriJs};
       if(!isiOS) {
         setTimeout(openStore, 700);
       }
@@ -220,7 +220,7 @@
     map.zoomControl.setPosition('bottomright');
 
     var marker = L.marker([lat, lon], {icon: POI_Icon}).addTo(map);
-    marker.bindPopup('${name}');//.openPopup();
+    marker.bindPopup(${nameJs});//.openPopup();
   </script>
 </body>
 
