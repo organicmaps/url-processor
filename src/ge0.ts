@@ -43,11 +43,13 @@ export function normalizeNameAndTitle(name: string | undefined): [string, string
   return [name, title];
 }
 
-export function normalizeZoom(zoom: string): number {
+export function normalizeZoom(zoom: string | undefined): number {
   const DEFAULT_ZOOM = 14;
-  const z = parseInt(zoom);
-  if (isNaN(z)) return DEFAULT_ZOOM;
-  if (z < 1 || z > 19) return DEFAULT_ZOOM;
+  // Upper bound mirrors the app's kMaxZoom (organicmaps libs/ge0/geo_url_parser.cpp, GeoURLInfo::SetZoom).
+  const MAX_ZOOM = 20;
+  if (!zoom || !/^\d+$/.test(zoom)) return DEFAULT_ZOOM;
+  const z = Number(zoom);
+  if (z < 1 || z > MAX_ZOOM) return DEFAULT_ZOOM;
   return z;
 }
 
@@ -104,6 +106,9 @@ function renderTemplate(template: string, llz: LatLonZoom, name: string, title: 
   return new Response(template, { headers: { 'content-type': 'text/html' } });
 }
 
+// Clear decimal coordinates: /lat,lon[,zoom][/name]. An optional ?z=<zoom> query param takes
+// precedence over the path zoom (see onGe0Decode). Kept in sync with the app's clear-coordinate
+// parser (organicmaps libs/ge0/geo_url_parser.cpp) — same grammar, same ?z= precedence and zoom cap.
 // Coordinates and zoom are validated separately.
 export const CLEAR_COORDINATES_REGEX =
   /(?<lat>-?\d+\.\d+)[^.](?<lon>-?\d+\.\d+)(?:[^.](?<zoom>\d{1,2}))?(?:[^\d.](?<name>.+))?/;
@@ -115,7 +120,9 @@ export async function onGe0Decode(template: string, url: string): Promise<Respon
 
   const m = pathname.match(CLEAR_COORDINATES_REGEX);
   if (m && m.groups) {
-    const llz = { lat: Number(m.groups.lat), lon: Number(m.groups.lon), zoom: normalizeZoom(m.groups.zoom) };
+    // Zoom precedence: ?z= query param, then a legacy /lat,lon,zoom path segment, then the default.
+    const zoom = normalizeZoom(new URLSearchParams(search).get('z') ?? m.groups.zoom);
+    const llz = { lat: Number(m.groups.lat), lon: Number(m.groups.lon), zoom };
     if (llz.lat <= -90.0 || llz.lat >= 90.0 || llz.lon <= -180.0 || llz.lon >= 180.0)
       throw new Error(`Invalid coordinates ${m.groups.lat} and ${m.groups.lon}`);
 

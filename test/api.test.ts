@@ -22,17 +22,21 @@ describe('decodeLatLonZoom — ge0 binary short links', () => {
 });
 
 describe('normalizeZoom', () => {
-  test('keeps zoom levels within 1..19', () => {
+  test('keeps zoom levels within 1..20 (matches the app kMaxZoom)', () => {
     expect(normalizeZoom('1')).toBe(1);
     expect(normalizeZoom('15')).toBe(15);
     expect(normalizeZoom('19')).toBe(19);
+    expect(normalizeZoom('20')).toBe(20);
   });
 
   test('falls back to the default zoom (14) for missing or out-of-range values', () => {
     expect(normalizeZoom('')).toBe(14);
     expect(normalizeZoom('0')).toBe(14);
+    expect(normalizeZoom('21')).toBe(14);
     expect(normalizeZoom('99')).toBe(14);
     expect(normalizeZoom('abc')).toBe(14);
+    expect(normalizeZoom('16abc')).toBe(14);
+    expect(normalizeZoom('1.5')).toBe(14);
   });
 });
 
@@ -128,5 +132,35 @@ describe('onGe0Decode — end to end', () => {
 
   test('rejects out-of-range clear-text coordinates', async () => {
     await expect(onGe0Decode(TEMPLATE, 'https://omaps.app/91.0,0.0')).rejects.toThrow(/Invalid coordinates/);
+  });
+
+  test('reads zoom from the ?z= query param', async () => {
+    const html = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/53.9,27.56?z=16')).text();
+    expect(html).toContain('<coords>53.9,27.56@16</coords>');
+  });
+
+  test('?z= takes precedence over a legacy path zoom', async () => {
+    const html = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/53.9,27.56,15?z=16')).text();
+    expect(html).toContain('<coords>53.9,27.56@16</coords>');
+  });
+
+  test('?z= is optional — falls back to the path zoom, then the default', async () => {
+    const path = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/53.9,27.56,15')).text();
+    expect(path).toContain('<coords>53.9,27.56@15</coords>');
+    const bare = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/53.9,27.56')).text();
+    expect(bare).toContain('<coords>53.9,27.56@14</coords>');
+  });
+
+  test('?z= coexists with a pin name: /lat,lon/Name?z=', async () => {
+    const html = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/53.9,27.56/Minsk?z=12')).text();
+    expect(html).toContain('<coords>53.9,27.56@12</coords>');
+    expect(html).toContain('<name>Minsk</name>');
+  });
+
+  test('out-of-range ?z= falls back to the default zoom', async () => {
+    for (const z of ['0', '99', 'abc', '16abc', '1.5']) {
+      const html = await (await onGe0Decode(TEMPLATE, `https://omaps.app/53.9,27.56?z=${z}`)).text();
+      expect(html).toContain('<coords>53.9,27.56@14</coords>');
+    }
   });
 });
