@@ -43,9 +43,9 @@ export function normalizeNameAndTitle(name: string | undefined): [string, string
   return [name, title];
 }
 
-export function normalizeZoom(zoom: string | undefined): number {
+export function normalizeZoom(zoom: string | null | undefined): number {
   const DEFAULT_ZOOM = 14;
-  // Upper bound mirrors the app's kMaxZoom (organicmaps libs/ge0/geo_url_parser.cpp, GeoURLInfo::SetZoom).
+  // Clamp a shared zoom to a sane range; out-of-range or non-numeric values fall back to the default.
   const MAX_ZOOM = 20;
   if (!zoom || !/^\d+$/.test(zoom)) return DEFAULT_ZOOM;
   const z = Number(zoom);
@@ -106,12 +106,13 @@ function renderTemplate(template: string, llz: LatLonZoom, name: string, title: 
   return new Response(template, { headers: { 'content-type': 'text/html' } });
 }
 
-// Clear decimal coordinates: /lat,lon[,zoom][/name]. An optional ?z=<zoom> query param takes
-// precedence over the path zoom (see onGe0Decode). Kept in sync with the app's clear-coordinate
-// parser (organicmaps libs/ge0/geo_url_parser.cpp) — same grammar, same ?z= precedence and zoom cap.
-// Coordinates and zoom are validated separately.
+// Clear decimal coordinates: /lat,lon[/name], with the zoom in an optional ?z= query param.
+// Grammar-identical to the app's clear-coordinate parser (organicmaps libs/ge0/parser.cpp,
+// Ge0Parser::ParseClearCoordinates; zoom read in libs/map/mwm_url.cpp) so a shared link resolves the
+// same here and in the app. There is no in-path zoom, so a trailing number stays part of the name
+// (e.g. "7-Eleven"). Coordinates are validated below.
 export const CLEAR_COORDINATES_REGEX =
-  /(?<lat>-?\d+\.\d+)[^.](?<lon>-?\d+\.\d+)(?:[^.](?<zoom>\d{1,2}))?(?:[^\d.](?<name>.+))?/;
+  /(?<lat>-?\d+\.\d+)[^.](?<lon>-?\d+\.\d+)(?:[^\d.](?<name>.+))?/;
 
 // Throws on decode error.
 export async function onGe0Decode(template: string, url: string): Promise<Response> {
@@ -120,8 +121,8 @@ export async function onGe0Decode(template: string, url: string): Promise<Respon
 
   const m = pathname.match(CLEAR_COORDINATES_REGEX);
   if (m && m.groups) {
-    // Zoom precedence: ?z= query param, then a legacy /lat,lon,zoom path segment, then the default.
-    const zoom = normalizeZoom(new URLSearchParams(search).get('z') ?? m.groups.zoom);
+    // Zoom comes from the ?z= query param (or the default when absent).
+    const zoom = normalizeZoom(new URLSearchParams(search).get('z'));
     const llz = { lat: Number(m.groups.lat), lon: Number(m.groups.lon), zoom };
     if (llz.lat <= -90.0 || llz.lat >= 90.0 || llz.lon <= -180.0 || llz.lon >= 180.0)
       throw new Error(`Invalid coordinates ${m.groups.lat} and ${m.groups.lon}`);

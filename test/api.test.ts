@@ -58,14 +58,18 @@ describe('normalizeNameAndTitle', () => {
 });
 
 describe('CLEAR_COORDINATES_REGEX', () => {
-  test('captures lat/lon plus optional zoom and name from a clear-text path', () => {
+  test('captures lat/lon and an optional /name from a clear-text path', () => {
     expect('/53.9,27.56'.match(CLEAR_COORDINATES_REGEX)?.groups).toMatchObject({ lat: '53.9', lon: '27.56' });
-    expect('/53.9,27.56,15,Minsk'.match(CLEAR_COORDINATES_REGEX)?.groups).toMatchObject({
+    expect('/53.9,27.56/Minsk'.match(CLEAR_COORDINATES_REGEX)?.groups).toMatchObject({
       lat: '53.9',
       lon: '27.56',
-      zoom: '15',
       name: 'Minsk',
     });
+  });
+
+  test('keeps a digit-initial name intact (there is no in-path zoom to swallow it)', () => {
+    expect('/48.85,2.29/7-Eleven'.match(CLEAR_COORDINATES_REGEX)?.groups?.name).toBe('7-Eleven');
+    expect('/48.85,2.29/24-hour-shop'.match(CLEAR_COORDINATES_REGEX)?.groups?.name).toBe('24-hour-shop');
   });
 
   test('does not match an encoded ge0 payload, so it falls through to the binary decoder', () => {
@@ -98,7 +102,7 @@ describe('onGe0Decode — end to end', () => {
   });
 
   test('renders clear-text coordinates', async () => {
-    const html = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/53.9,27.56,15,Minsk')).text();
+    const html = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/53.9,27.56/Minsk?z=15')).text();
     expect(html).toContain('<coords>53.9,27.56@15</coords>');
     expect(html).toContain('<name>Minsk</name>');
   });
@@ -109,7 +113,7 @@ describe('onGe0Decode — end to end', () => {
   });
 
   test('HTML-escapes the pin name of a clear-text link to prevent XSS', async () => {
-    const html = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/12.3,45.6,15,<script>alert(1)</script>')).text();
+    const html = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/12.3,45.6/<script>alert(1)</script>')).text();
     expect(html).toContain('<name>&lt;script&gt;alert(1)&lt;/script&gt;</name>');
     expect(html).not.toContain('<script>alert(1)</script>');
   });
@@ -139,14 +143,13 @@ describe('onGe0Decode — end to end', () => {
     expect(html).toContain('<coords>53.9,27.56@16</coords>');
   });
 
-  test('?z= takes precedence over a legacy path zoom', async () => {
-    const html = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/53.9,27.56,15?z=16')).text();
-    expect(html).toContain('<coords>53.9,27.56@16</coords>');
+  test('a digit-initial name is not mistaken for a zoom', async () => {
+    const html = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/48.85,2.29/7-Eleven?z=16')).text();
+    expect(html).toContain('<coords>48.85,2.29@16</coords>');
+    expect(html).toContain('<name>7-Eleven</name>');
   });
 
-  test('?z= is optional — falls back to the path zoom, then the default', async () => {
-    const path = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/53.9,27.56,15')).text();
-    expect(path).toContain('<coords>53.9,27.56@15</coords>');
+  test('?z= is optional — a bare link falls back to the default zoom', async () => {
     const bare = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/53.9,27.56')).text();
     expect(bare).toContain('<coords>53.9,27.56@14</coords>');
   });
