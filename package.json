@@ -6,26 +6,23 @@
   "main": "workers-site/index.js",
   "scripts": {
     "build": "esbuild src/index.ts --bundle --outfile=workers-site/index.js",
-    "lint": "eslint src/**/*.ts && tsc --noEmit",
+    "lint": "oxlint --deny-warnings src && npm run typecheck",
+    "typecheck": "tsc --noEmit",
     "test": "jest",
     "format": "prettier --write 'src/**/*.{ts,tsx,json}' public/*.json",
+    "format:check": "prettier --check 'src/**/*.{ts,tsx,json}' public/*.json",
     "upgrade": "npx npm-check-updates --peer -u && npm install"
   },
   "author": "Alexander Borsuk <me@alex.bio>",
   "license": "MIT",
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261007.1",
-    "@eslint/eslintrc": "^3.3.7",
-    "@eslint/js": "^10.0.1",
     "@types/jest": "^30.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.71.1",
-    "@typescript-eslint/parser": "^8.71.1",
     "esbuild": "^0.28.2",
-    "eslint": "^10.12.0",
-    "globals": "^17.13.0",
     "jest": "^30.5.2",
+    "oxlint": "^1.87.0",
     "prettier": "^3.9.9",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "wrangler": "^4.148.0"
   },
   "dependencies": {

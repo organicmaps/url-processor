@@ -38,10 +38,13 @@ npm i
 
 Use `npx wrangler dev` for localhost development.
 
+Run `npm run lint` for Oxlint and TypeScript 7 type checking. To check types alone,
+run `npm run typecheck`. Formatting is checked separately with
+`npm run format:check`; use `npm run format` to apply Prettier formatting.
+
 Run `npm run upgrade` to update dependencies. The command uses
 `npm-check-updates --peer` to skip updates that conflict with peer requirements.
-For example, TypeScript must remain on 6.0.x while `@typescript-eslint` requires
-`>=4.8.4 <6.1.0`. Commit both `package.json` and `package-lock.json` after upgrades.
+Commit both `package.json` and `package-lock.json` after upgrades.
 
 ## Deployment
 
