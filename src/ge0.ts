@@ -106,13 +106,11 @@ function renderTemplate(template: string, llz: LatLonZoom, name: string, title: 
   return new Response(template, { headers: { 'content-type': 'text/html' } });
 }
 
-// Clear decimal coordinates: /lat,lon[/name], with the zoom in an optional ?z= query param.
-// Grammar-identical to the app's clear-coordinate parser (organicmaps libs/ge0/parser.cpp,
-// Ge0Parser::ParseClearCoordinates; zoom read in libs/map/mwm_url.cpp) so a shared link resolves the
-// same here and in the app. There is no in-path zoom, so a trailing number stays part of the name
-// (e.g. "7-Eleven"). Coordinates are validated below.
-export const CLEAR_COORDINATES_REGEX =
-  /(?<lat>-?\d+\.\d+)[^.](?<lon>-?\d+\.\d+)(?:[^\d.](?<name>.+))?/;
+// Clear coordinates: /lat,lon[/name], with an optional ?z= query param. Each number
+// may be an integer or have a fractional part: other apps may share rounded coordinates.
+// The comma distinguishes this format from ge0's Base64 alphabet. Match the complete
+// path so malformed coordinates and coordinate-like pin names cannot become a location.
+export const CLEAR_COORDINATES_REGEX = /^\/(?<lat>-?\d+(?:\.\d+)?),(?<lon>-?\d+(?:\.\d+)?)(?:\/(?<name>.*))?$/;
 
 // Throws on decode error.
 export async function onGe0Decode(template: string, url: string): Promise<Response> {
@@ -124,7 +122,7 @@ export async function onGe0Decode(template: string, url: string): Promise<Respon
     // Zoom comes from the ?z= query param (or the default when absent).
     const zoom = normalizeZoom(new URLSearchParams(search).get('z'));
     const llz = { lat: Number(m.groups.lat), lon: Number(m.groups.lon), zoom };
-    if (llz.lat <= -90.0 || llz.lat >= 90.0 || llz.lon <= -180.0 || llz.lon >= 180.0)
+    if (llz.lat < -90.0 || llz.lat > 90.0 || llz.lon < -180.0 || llz.lon > 180.0)
       throw new Error(`Invalid coordinates ${m.groups.lat} and ${m.groups.lon}`);
 
     const [name, title] = normalizeNameAndTitle(m.groups.name);
@@ -133,7 +131,7 @@ export async function onGe0Decode(template: string, url: string): Promise<Respon
 
   // Filter empty pathname elements.
   const params = pathname.split('/').filter(Boolean);
-  const encodedLatLonZoom = params[0];
+  const encodedLatLonZoom = params[0] ?? '';
   const llz = decodeLatLonZoom(encodedLatLonZoom);
   const [name, title] = normalizeNameAndTitle(params.length > 1 ? params[1] : undefined);
   return renderTemplate(template, llz, name, title, path);
@@ -143,6 +141,15 @@ export async function onGe0Decode(template: string, url: string): Promise<Respon
 export function decodeLatLonZoom(encodedLatLonZoom: string): LatLonZoom {
   const GE0_MAX_POINT_BYTES = 10;
   const GE0_MAX_COORD_BITS = GE0_MAX_POINT_BYTES * 3;
+
+  // Reject malformed clear-coordinate paths before Base64 bit operations can turn
+  // unknown characters into zero bits or oversized payloads can wrap the shifts.
+  if (
+    encodedLatLonZoom.length < 2 ||
+    encodedLatLonZoom.length > GE0_MAX_POINT_BYTES + 1 ||
+    !/^[A-Za-z0-9_-]+$/.test(encodedLatLonZoom)
+  )
+    throw new Error(`Invalid coordinates ${encodedLatLonZoom}, the url was not encoded properly`);
 
   let zoom = base64Reverse[encodedLatLonZoom.charCodeAt(0)];
   if (zoom > 63) throw new Error('Invalid zoom level: the url was not encoded properly');
@@ -162,9 +169,12 @@ export function decodeLatLonZoom(encodedLatLonZoom: string): LatLonZoom {
     lon |= lon1 << shift;
   }
 
-  const middleOfSquare = 1 << (3 * (GE0_MAX_POINT_BYTES - latLonBytes) - 1);
-  lat += middleOfSquare;
-  lon += middleOfSquare;
+  const remainingBits = 3 * (GE0_MAX_POINT_BYTES - latLonBytes) - 1;
+  if (remainingBits >= 0) {
+    const middleOfSquare = 1 << remainingBits;
+    lat += middleOfSquare;
+    lon += middleOfSquare;
+  }
 
   lat = (lat / ((1 << GE0_MAX_COORD_BITS) - 1)) * 180.0 - 90.0;
   lon = (lon / (1 << GE0_MAX_COORD_BITS)) * 360.0 - 180.0;

@@ -12,6 +12,8 @@ describe('decodeLatLonZoom — ge0 binary short links', () => {
     ['AwAAAAAAAA', { lat: 0, lon: 0, zoom: 4 }],
     ['zzzzzzzzzz', { lat: 38.57143, lon: 77.14286, zoom: 17 }],
     ['AA', { lat: -78.75, lon: -157.5, zoom: 4 }],
+    ['1234567890', { lat: 38.97939, lon: 132.67896, zoom: 17 }],
+    ['AwAAAAAAAAA', { lat: 0, lon: 0, zoom: 4 }],
   ])('decodes %s', (encoded, expected) => {
     expect(decodeLatLonZoom(encoded as string)).toEqual(expected);
   });
@@ -19,6 +21,13 @@ describe('decodeLatLonZoom — ge0 binary short links', () => {
   test('throws when decoded coordinates fall outside the valid range', () => {
     expect(() => decodeLatLonZoom('----------')).toThrow(/Invalid coordinates/);
   });
+
+  test.each(['', 'A', '?wAAAAAAAA', 'AwAAAAAAA?', 'AwAAAAAAAAAAAA', '-14,-170', '-14.333333,-170'])(
+    'rejects an invalid binary payload %j',
+    (encoded) => {
+      expect(() => decodeLatLonZoom(encoded)).toThrow(/Invalid/);
+    },
+  );
 });
 
 describe('normalizeZoom', () => {
@@ -106,6 +115,77 @@ describe('onGe0Decode — end to end', () => {
     expect(html).toContain('<coords>53.9,27.56@15</coords>');
     expect(html).toContain('<name>Minsk</name>');
   });
+
+  test.each([
+    ['-14.333333,-170', -14.333333, -170],
+    ['-14,-170.25', -14, -170.25],
+    ['-14,-170', -14, -170],
+    ['14,170', 14, 170],
+    ['0,0', 0, 0],
+    ['0,-170', 0, -170],
+    ['-14,0', -14, 0],
+    ['-0,-0.0', 0, 0],
+    ['-90,-180', -90, -180],
+    ['90,180', 90, 180],
+  ])('renders rounded coordinates %s with the correct name and default zoom', async (coordinates, lat, lon) => {
+    const url = `https://omaps.app/${coordinates}/American_Samoa`;
+    const resp = await onGe0Decode(TEMPLATE, url);
+    expect(resp.status).toBe(200);
+    const html = await resp.text();
+    expect(html).toContain(`<coords>${lat},${lon}@14</coords>`);
+    expect(html).toContain('<name>American Samoa</name>');
+    expect(html).toContain(`<path>/${coordinates}/American_Samoa</path>`);
+  });
+
+  test('keeps the zoom and digit-initial name on an integer-coordinate link', async () => {
+    const html = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/48,2/7-Eleven?z=16')).text();
+    expect(html).toContain('<coords>48,2@16</coords>');
+    expect(html).toContain('<name>7-Eleven</name>');
+  });
+
+  test.each(['0,0', '0,0/'])('renders a nameless integer-coordinate link %s', async (path) => {
+    const html = await (await onGe0Decode(TEMPLATE, `https://omaps.app/${path}`)).text();
+    expect(html).toContain('<coords>0,0@14</coords>');
+    expect(html).toContain('Shared via');
+  });
+
+  test('keeps digit-only binary short links on the binary decoder path', async () => {
+    const html = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/1234567890/Some_Name')).text();
+    expect(html).toContain('<coords>38.97939,132.67896@17</coords>');
+    expect(html).toContain('<name>Some Name</name>');
+  });
+
+  test.each([
+    '-14.,-170',
+    '-.5,-170',
+    '-14,-170.',
+    '-14,-.5',
+    '-14.3.3,-170',
+    '-14,-170suffix',
+    'prefix.route/-14.333333,-170.0',
+    '-14;-170',
+    '-14,-170,16',
+    '-14,',
+    ',-170',
+    '1e1,2',
+    '--14,-170',
+    '',
+  ])('rejects malformed coordinates %j instead of rendering another location', async (path) => {
+    await expect(onGe0Decode(TEMPLATE, `https://omaps.app/${path}`)).rejects.toThrow(/Invalid/);
+  });
+
+  test('does not reinterpret the coordinate-like name of a binary link as its location', async () => {
+    const html = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/B4srhdHVVt/53.9,27.56')).text();
+    expect(html).toContain('<coords>64.5234,12.1234@4</coords>');
+    expect(html).toContain('<name>53.9,27.56</name>');
+  });
+
+  test.each(['91,0', '-91,0', '0,181', '0,-181', '90.000001,0', '0,180.000001'])(
+    'rejects out-of-range coordinates %s',
+    async (coordinates) => {
+      await expect(onGe0Decode(TEMPLATE, `https://omaps.app/${coordinates}`)).rejects.toThrow(/Invalid coordinates/);
+    },
+  );
 
   test('HTML-escapes the pin name of an encoded link to prevent XSS', async () => {
     const html = await (await onGe0Decode(TEMPLATE, 'https://omaps.app/B4srhdHVVt/a%3Cb%3Ec%26d')).text();

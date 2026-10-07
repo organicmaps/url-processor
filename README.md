@@ -5,6 +5,10 @@ Root domain redirects to https://organicmaps.app/.
 URLs like `http(s)://omaps.app/ENCODEDCOORDINATES/PINNAME` are decoded to lat, lon and zoom level. Then the OSM
 map is displayed and url schemes are opened on mobile apps.
 
+Human-readable links use `https://omaps.app/LAT,LON[/PINNAME][?z=ZOOM]`. Each coordinate may be an integer
+or a decimal, so links such as `https://omaps.app/-14.333333,-170/American_Samoa` work even when another
+app rounds a coordinate. Latitude must be in `[-90,90]` and longitude in `[-180,180]`; zoom defaults to 14.
+
 Add some query parameters to test:
 
 - For dev environment:
