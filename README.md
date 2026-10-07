@@ -26,6 +26,8 @@ Add some query parameters to test:
 
 ## Requirements
 
+Use Node.js 24, as specified in `.nvmrc` and used by CI.
+
 Install CloudFlare's wrangler and other dev dependencies using npm:
 
 ```bash
@@ -35,6 +37,11 @@ npm i
 ## Development
 
 Use `npx wrangler dev` for localhost development.
+
+Run `npm run upgrade` to update dependencies. The command uses
+`npm-check-updates --peer` to skip updates that conflict with peer requirements.
+For example, TypeScript must remain on 6.0.x while `@typescript-eslint` requires
+`>=4.8.4 <6.1.0`. Commit both `package.json` and `package-lock.json` after upgrades.
 
 ## Deployment
 
