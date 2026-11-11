@@ -14,8 +14,8 @@ A single Cloudflare Worker that backs the `omaps.app` domain for Organic Maps. I
 npm i                       # install (also pulls wrangler)
 npx wrangler dev            # local dev server (DEBUG=true)
 npm run build               # esbuild bundles src/index.ts -> workers-site/index.js
-npm test                    # jest (TS compiled via test/esbuild-transform.cjs)
-npx jest -t 'zoom'          # run a single test by name substring
+npm test                    # vitest (native TypeScript support)
+npm test -- -t 'zoom'       # run a single test by name substring
 npm run lint                # Oxlint src + TypeScript 7 type checking
 npm run typecheck           # tsc --noEmit (TypeScript 7)
 npm run format              # prettier over src/**/*.{ts,tsx,json} and public/*.json
@@ -26,9 +26,9 @@ npx wrangler deploy --env omaps   # manual prod deploy (README shows the older `
 
 ## Testing
 
-`npm test` runs Jest. TypeScript is transpiled by a tiny esbuild-based transformer (`test/esbuild-transform.cjs`, wired via `jest.config.js`) — the same bundler as the production build, so there is **no ts-jest/babel dependency** or dependency on TypeScript's JavaScript compiler API. The repo uses TypeScript 7 and Oxlint. Tests live in `test/*.test.ts` and import straight from `src/`.
+`npm test` runs Vitest. Tests in `test/*.test.ts` import directly from `src/` and use explicit imports from `vitest`. No custom transformer is needed. The repo uses TypeScript 7 and Oxlint.
 
-`test/api.test.ts` covers the pure units — `decodeLatLonZoom`, `normalizeZoom`, `normalizeNameAndTitle` (including the Windows-1251 fallback), `CLEAR_COORDINATES_REGEX` — plus `onGe0Decode` end-to-end (encoded + clear-text paths, HTML-escaping, out-of-range rejection). To test a new helper, **`export` it from `src/ge0.ts`** — only exported symbols are reachable from tests. Run one test with `npx jest -t '<name substring>'`.
+`test/api.test.ts` covers the pure units — `decodeLatLonZoom`, `normalizeZoom`, `normalizeNameAndTitle` (including the Windows-1251 fallback), `CLEAR_COORDINATES_REGEX` — plus `onGe0Decode` end-to-end (encoded + clear-text paths, HTML-escaping, out-of-range rejection). To test a new helper, **`export` it from `src/ge0.ts`** — only exported symbols are reachable from tests. Run one test with `npm test -- -t '<name substring>'`.
 
 `npm run lint` (Oxlint over `src/` + `tsc --noEmit`) is expected to pass — **CI runs it on PRs** — so treat a lint failure as a real regression, not pre-existing noise. `.oxlintrc.json` preserves the migrated code-quality rules and Worker globals; Prettier handles formatting through `npm run format:check` in CI.
 

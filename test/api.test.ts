@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import {
   CLEAR_COORDINATES_REGEX,
   decodeLatLonZoom,
@@ -15,7 +16,7 @@ describe('decodeLatLonZoom — ge0 binary short links', () => {
     ['1234567890', { lat: 38.97939, lon: 132.67896, zoom: 17 }],
     ['AwAAAAAAAAA', { lat: 0, lon: 0, zoom: 4 }],
   ])('decodes %s', (encoded, expected) => {
-    expect(decodeLatLonZoom(encoded as string)).toEqual(expected);
+    expect(decodeLatLonZoom(encoded)).toEqual(expected);
   });
 
   test('throws when decoded coordinates fall outside the valid range', () => {
@@ -209,7 +210,7 @@ describe('onGe0Decode — end to end', () => {
   test('escapes the app path before embedding it in meta and JavaScript contexts', async () => {
     const html = await (await onGe0Decode(FULL_TEMPLATE, "https://omaps.app/B4srhdHVVt/';alert(1)//")).text();
     expect(html).toContain('app-argument=om://B4srhdHVVt/&apos;;alert(1)//');
-    expect(html).toContain("window.location=\"om://B4srhdHVVt/';alert(1)//\";");
+    expect(html).toContain(`window.location="om://B4srhdHVVt/';alert(1)//";`);
     expect(html).not.toContain("window.location='om://B4srhdHVVt/';alert(1)//';");
     expect(html).toContain('<path>/B4srhdHVVt/&apos;;alert(1)//</path>');
   });

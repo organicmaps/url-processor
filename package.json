@@ -8,7 +8,7 @@
     "build": "esbuild src/index.ts --bundle --outfile=workers-site/index.js",
     "lint": "oxlint --deny-warnings src && npm run typecheck",
     "typecheck": "tsc --noEmit",
-    "test": "jest",
+    "test": "vitest run",
     "format": "prettier --write 'src/**/*.{ts,tsx,json}' public/*.json",
     "format:check": "prettier --check 'src/**/*.{ts,tsx,json}' public/*.json",
     "upgrade": "npx npm-check-updates --peer -u && npm install"
@@ -16,14 +16,13 @@
   "author": "Alexander Borsuk <me@alex.bio>",
   "license": "MIT",
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20261007.1",
-    "@types/jest": "^30.0.0",
+    "@cloudflare/workers-types": "^5.20261110.1",
     "esbuild": "^0.28.2",
-    "jest": "^30.5.2",
-    "oxlint": "^1.87.0",
-    "prettier": "^3.9.9",
+    "oxlint": "^1.93.0",
+    "prettier": "^3.9.10",
     "typescript": "^7.0.2",
-    "wrangler": "^4.148.0"
+    "vitest": "^5.1.0",
+    "wrangler": "^4.160.0"
   },
   "dependencies": {
     "@cloudflare/kv-asset-handler": "^0.5.0"

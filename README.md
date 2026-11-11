@@ -42,9 +42,13 @@ Run `npm run lint` for Oxlint and TypeScript 7 type checking. To check types alo
 run `npm run typecheck`. Formatting is checked separately with
 `npm run format:check`; use `npm run format` to apply Prettier formatting.
 
+Run `npm test` for the Vitest suite, `npm test -- -t zoom` to filter by name,
+or `npx vitest` for watch mode.
+
 Run `npm run upgrade` to update dependencies. The command uses
 `npm-check-updates --peer` to skip updates that conflict with peer requirements.
-Commit both `package.json` and `package-lock.json` after upgrades.
+Commit both `package.json` and `package-lock.json` after upgrades. Run `npm audit`
+to check both production and development dependencies for known vulnerabilities.
 
 ## Deployment
 
